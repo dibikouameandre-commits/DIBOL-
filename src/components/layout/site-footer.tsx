@@ -21,26 +21,29 @@ const footerLinks = [
 
 export function SiteFooter() {
   return (
-    <footer className="border-t bg-muted/30">
-      <div className="mx-auto grid max-w-6xl gap-10 px-4 py-12 sm:px-6 md:grid-cols-[1.5fr_1fr_1fr]">
-        <div className="flex flex-col gap-2">
-          <span className="text-lg font-bold tracking-tight">
+    <footer className="relative overflow-hidden border-t bg-muted/30">
+      <div className="absolute inset-0 -z-10 bg-grid-fade opacity-40" />
+      <div className="mx-auto grid max-w-6xl gap-12 px-4 py-16 sm:px-6 md:grid-cols-[1.5fr_1fr_1fr]">
+        <div className="flex flex-col gap-3">
+          <span className="text-xl font-bold tracking-tight">
             {siteConfig.name}
           </span>
-          <p className="max-w-xs text-sm text-muted-foreground">
+          <p className="max-w-xs text-sm leading-relaxed text-muted-foreground">
             {siteConfig.description}
           </p>
         </div>
 
         {footerLinks.map((group) => (
-          <div key={group.title} className="flex flex-col gap-3">
-            <span className="text-sm font-medium">{group.title}</span>
-            <ul className="flex flex-col gap-2">
+          <div key={group.title} className="flex flex-col gap-4">
+            <span className="text-xs font-semibold tracking-wider text-muted-foreground/80 uppercase">
+              {group.title}
+            </span>
+            <ul className="flex flex-col gap-2.5">
               {group.links.map((link) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+                    className="inline-block text-sm text-muted-foreground transition-all duration-200 hover:translate-x-0.5 hover:text-foreground"
                   >
                     {link.title}
                   </Link>
