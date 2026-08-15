@@ -65,6 +65,7 @@ export async function createProduct(formData: FormData): Promise<ActionResult> {
 
   revalidatePath("/admin/produits");
   revalidatePath("/boutique");
+  revalidatePath("/");
   redirect(`/admin/produits/${product.id}`);
 }
 
@@ -112,6 +113,7 @@ export async function updateProduct(
   revalidatePath("/admin/produits");
   revalidatePath(`/produits/${parsed.data.slug}`);
   revalidatePath("/boutique");
+  revalidatePath("/");
   return { success: true };
 }
 
@@ -130,6 +132,7 @@ export async function toggleProductPublished(id: string): Promise<ActionResult> 
 
   revalidatePath("/admin/produits");
   revalidatePath("/boutique");
+  revalidatePath("/");
   return { success: true };
 }
 
@@ -161,5 +164,6 @@ export async function deleteProduct(id: string): Promise<ActionResult> {
 
   revalidatePath("/admin/produits");
   revalidatePath("/boutique");
+  revalidatePath("/");
   return { success: true };
 }

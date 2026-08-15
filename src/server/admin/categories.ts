@@ -44,6 +44,7 @@ export async function createCategory(formData: FormData): Promise<ActionResult> 
   revalidatePath("/admin/categories");
   revalidatePath("/categories");
   revalidatePath("/boutique");
+  revalidatePath("/");
   return { success: true };
 }
 
@@ -70,6 +71,7 @@ export async function updateCategory(
   revalidatePath("/admin/categories");
   revalidatePath("/categories");
   revalidatePath("/boutique");
+  revalidatePath("/");
   return { success: true };
 }
 
@@ -88,5 +90,7 @@ export async function deleteCategory(id: string): Promise<ActionResult> {
 
   revalidatePath("/admin/categories");
   revalidatePath("/categories");
+  revalidatePath("/boutique");
+  revalidatePath("/");
   return { success: true };
 }
