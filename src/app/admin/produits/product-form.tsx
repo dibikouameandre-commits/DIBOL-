@@ -106,7 +106,6 @@ export function ProductForm({
           name="description"
           rows={5}
           defaultValue={product?.description}
-          required
         />
       </div>
 
