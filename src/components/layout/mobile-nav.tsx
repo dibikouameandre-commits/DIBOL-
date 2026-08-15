@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { Menu } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Sheet,
   SheetContent,
@@ -12,9 +12,14 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { cn } from "@/lib/utils";
 import { siteConfig } from "@/config/site";
 
-export function MobileNav() {
+export function MobileNav({
+  isAuthenticated = false,
+}: {
+  isAuthenticated?: boolean;
+}) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -35,12 +40,30 @@ export function MobileNav() {
               key={item.href}
               href={item.href}
               onClick={() => setOpen(false)}
-              className="rounded-md px-2 py-2 text-sm font-medium hover:bg-accent"
+              className="rounded-lg px-3 py-2.5 text-sm font-medium transition-colors hover:bg-accent"
             >
               {item.title}
             </Link>
           ))}
         </nav>
+        {!isAuthenticated && (
+          <div className="mt-4 flex flex-col gap-2 border-t px-4 pt-4">
+            <Link
+              href="/connexion"
+              onClick={() => setOpen(false)}
+              className={cn(buttonVariants({ variant: "outline" }), "w-full")}
+            >
+              Connexion
+            </Link>
+            <Link
+              href="/inscription"
+              onClick={() => setOpen(false)}
+              className={cn(buttonVariants(), "w-full")}
+            >
+              Créer un compte
+            </Link>
+          </div>
+        )}
       </SheetContent>
     </Sheet>
   );
