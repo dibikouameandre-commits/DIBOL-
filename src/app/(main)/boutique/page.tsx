@@ -31,7 +31,7 @@ export default async function BoutiquePage({
   const activeCategory = categories.find((c) => c.slug === categorie);
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
+    <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
       <div className="mb-8 flex flex-col gap-2">
         <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
           Boutique
@@ -62,7 +62,7 @@ export default async function BoutiquePage({
               key={category.slug}
               href={`/boutique?categorie=${category.slug}${q ? `&q=${q}` : ""}`}
               className={cn(
-                "rounded-full border px-3 py-1 text-sm font-medium transition-colors",
+                "rounded-full border px-4 py-1.5 text-sm font-medium transition-colors",
                 categorie === category.slug
                   ? "border-primary bg-primary text-primary-foreground"
                   : "hover:bg-accent"

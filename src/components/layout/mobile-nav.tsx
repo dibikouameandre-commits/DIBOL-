@@ -51,14 +51,17 @@ export function MobileNav({
             <Link
               href="/connexion"
               onClick={() => setOpen(false)}
-              className={cn(buttonVariants({ variant: "outline" }), "w-full")}
+              className={cn(
+                buttonVariants({ variant: "outline", size: "lg" }),
+                "w-full"
+              )}
             >
               Connexion
             </Link>
             <Link
               href="/inscription"
               onClick={() => setOpen(false)}
-              className={cn(buttonVariants(), "w-full")}
+              className={cn(buttonVariants({ size: "lg" }), "w-full")}
             >
               Créer un compte
             </Link>

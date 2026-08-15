@@ -24,7 +24,6 @@ export function AddToCartButton({
   return (
     <Button
       size="lg"
-      className="gap-2"
       onClick={() => {
         addItem({ productId, slug, name, price, categorySlug });
         toast.success("Ajouté au panier", { description: name });

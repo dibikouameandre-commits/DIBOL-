@@ -40,7 +40,10 @@ export function CartView() {
         <p className="font-medium">Ton panier est vide</p>
         <Link
           href="/boutique"
-          className={cn(buttonVariants({ variant: "secondary" }), "mt-2")}
+          className={cn(
+            buttonVariants({ variant: "secondary", size: "lg" }),
+            "mt-2"
+          )}
         >
           Explorer la boutique
         </Link>

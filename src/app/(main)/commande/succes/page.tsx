@@ -85,7 +85,10 @@ export default async function CommandeSuccesPage({
         </ul>
       </div>
 
-      <Link href="/dashboard" className={cn(buttonVariants(), "mt-2")}>
+      <Link
+        href="/dashboard"
+        className={cn(buttonVariants({ size: "lg" }), "mt-2")}
+      >
         Voir mes achats
       </Link>
     </div>
