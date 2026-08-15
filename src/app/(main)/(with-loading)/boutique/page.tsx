@@ -47,9 +47,9 @@ export default async function BoutiquePage({
         <SearchForm defaultValue={q} categorie={categorie} />
         <div className="flex flex-wrap gap-2">
           <Link
-            href="/boutique"
+            href={q ? `/boutique?q=${q}` : "/boutique"}
             className={cn(
-              "rounded-full border px-3 py-1 text-sm font-medium transition-colors",
+              "rounded-full border px-4 py-1.5 text-sm font-medium transition-colors",
               !categorie
                 ? "border-primary bg-primary text-primary-foreground"
                 : "hover:bg-accent"
