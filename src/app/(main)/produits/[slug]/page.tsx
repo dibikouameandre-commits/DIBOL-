@@ -100,7 +100,8 @@ export default async function ProductPage({
         <ProductThumbnail
           categorySlug={product.category.slug}
           className="aspect-square rounded-2xl"
-          iconClassName="size-20"
+          iconClassName="size-16"
+          iconWrapperClassName="size-32"
         />
 
         <div className="flex flex-col gap-5">

@@ -5,10 +5,12 @@ export function ProductThumbnail({
   categorySlug,
   className,
   iconClassName,
+  iconWrapperClassName,
 }: {
   categorySlug: string;
   className?: string;
   iconClassName?: string;
+  iconWrapperClassName?: string;
 }) {
   const { gradient, icon: Icon } = getCategoryVisual(categorySlug);
 
@@ -21,10 +23,19 @@ export function ProductThumbnail({
       )}
     >
       <div className="absolute inset-0 bg-grid-fade opacity-20" />
-      <Icon
-        className={cn("relative size-10 text-white/90", iconClassName)}
-        strokeWidth={1.5}
-      />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_35%,rgba(255,255,255,0.16),transparent_60%)]" />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/15 via-transparent to-transparent" />
+      <div
+        className={cn(
+          "relative flex size-16 items-center justify-center rounded-2xl bg-white/10 backdrop-blur-sm transition-transform duration-300 ease-out group-hover:scale-110",
+          iconWrapperClassName
+        )}
+      >
+        <Icon
+          className={cn("size-8 text-white", iconClassName)}
+          strokeWidth={1.5}
+        />
+      </div>
     </div>
   );
 }
