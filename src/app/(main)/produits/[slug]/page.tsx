@@ -8,19 +8,8 @@ import { ProductCard } from "@/components/product/product-card";
 import { ProductThumbnail } from "@/components/product/product-thumbnail";
 import { formatPrice } from "@/lib/format";
 import { siteConfig } from "@/config/site";
-import {
-  getProductBySlug,
-  getProductSlugs,
-  getRelatedProducts,
-} from "@/server/catalog";
+import { getProductBySlug, getRelatedProducts } from "@/server/catalog";
 import { AddToCartButton } from "./add-to-cart-button";
-
-export const revalidate = 3600;
-
-export async function generateStaticParams() {
-  const slugs = await getProductSlugs();
-  return slugs.map((slug) => ({ slug }));
-}
 
 export async function generateMetadata({
   params,
