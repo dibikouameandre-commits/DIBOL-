@@ -5,15 +5,19 @@ import path from "node:path";
 // Storage for downloadable product files, with two backends selected
 // automatically via environment:
 //
-// - Vercel Blob (when BLOB_READ_WRITE_TOKEN is set) — required in production
-//   on Vercel, whose filesystem is read-only/ephemeral outside of /tmp.
+// - Vercel Blob, **private** store (when BLOB_READ_WRITE_TOKEN is set) —
+//   required in production on Vercel, whose filesystem is read-only/
+//   ephemeral outside of /tmp. Private storage means blobs are never
+//   publicly fetchable by URL — every read goes through the authenticated
+//   `get()` SDK call, which itself requires OIDC or BLOB_READ_WRITE_TOKEN.
 // - Local filesystem (fallback) — zero-config for local dev.
 //
 // Every caller only depends on saveProductFile / readProductFile /
 // deleteProductFile, so the rest of the app never needs to know which
 // backend is active. Downloads are always streamed through our own
 // authenticated route (never a raw redirect to the storage URL), so gating
-// stays correct regardless of backend.
+// stays correct regardless of backend — this is on top of, not instead of,
+// Blob's own private-storage authentication.
 
 const STORAGE_ROOT = path.join(process.cwd(), "storage", "products");
 const useBlob = !!process.env.BLOB_READ_WRITE_TOKEN;
@@ -29,11 +33,12 @@ export async function saveProductFile(file: File) {
 
   if (useBlob) {
     const { put } = await import("@vercel/blob");
-    const blob = await put(`products/${randomUUID()}${extension}`, file, {
-      access: "public",
+    const pathname = `products/${randomUUID()}${extension}`;
+    await put(pathname, file, {
+      access: "private",
       addRandomSuffix: false,
     });
-    return { key: blob.url, originalName: file.name };
+    return { key: pathname, originalName: file.name };
   }
 
   await ensureStorageRoot();
@@ -45,10 +50,15 @@ export async function saveProductFile(file: File) {
 }
 
 export async function readProductFile(key: string): Promise<Buffer> {
-  if (useBlob || key.startsWith("http")) {
-    const res = await fetch(key);
-    if (!res.ok) throw new Error(`Failed to fetch blob: ${res.status}`);
-    return Buffer.from(await res.arrayBuffer());
+  if (useBlob) {
+    const { get } = await import("@vercel/blob");
+    const result = await get(key, { access: "private" });
+
+    if (!result || result.statusCode !== 200 || !result.stream) {
+      throw new Error(`Failed to read blob "${key}": not found`);
+    }
+
+    return Buffer.from(await new Response(result.stream).arrayBuffer());
   }
 
   return readFile(path.join(STORAGE_ROOT, key));
@@ -56,7 +66,7 @@ export async function readProductFile(key: string): Promise<Buffer> {
 
 export async function deleteProductFile(key: string) {
   try {
-    if (useBlob || key.startsWith("http")) {
+    if (useBlob) {
       const { del } = await import("@vercel/blob");
       await del(key);
       return;
