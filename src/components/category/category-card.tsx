@@ -19,9 +19,9 @@ export function CategoryCard({
       <Card className="h-full gap-0 overflow-hidden py-0 transition-all group-hover:-translate-y-0.5 group-hover:shadow-lg group-hover:ring-primary/30">
         <ProductThumbnail categorySlug={slug} className="aspect-[16/9]" />
         <div className="flex flex-1 flex-col gap-1.5 p-4">
-          <h3 className="font-heading font-medium">{name}</h3>
+          <h3 className="font-heading font-semibold tracking-tight">{name}</h3>
           {description && (
-            <p className="line-clamp-2 text-sm text-muted-foreground">
+            <p className="line-clamp-2 text-sm leading-relaxed text-muted-foreground">
               {description}
             </p>
           )}

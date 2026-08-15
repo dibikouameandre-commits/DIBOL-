@@ -33,7 +33,9 @@ export default async function BoutiquePage({
   return (
     <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
       <div className="mb-8 flex flex-col gap-2">
-        <h1 className="text-3xl font-bold tracking-tight">Boutique</h1>
+        <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
+          Boutique
+        </h1>
         <p className="text-muted-foreground">
           {products.length} produit{products.length > 1 ? "s" : ""}
           {activeCategory ? ` dans « ${activeCategory.name} »` : ""}

@@ -17,7 +17,9 @@ export default async function CategoriesPage() {
   return (
     <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
       <div className="mb-8 flex flex-col gap-2">
-        <h1 className="text-3xl font-bold tracking-tight">Catégories</h1>
+        <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
+          Catégories
+        </h1>
         <p className="text-muted-foreground">
           Trouve la bonne catégorie pour tes besoins.
         </p>

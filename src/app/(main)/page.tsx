@@ -57,11 +57,11 @@ export default async function HomePage() {
             <Sparkles className="size-3.5" />
             Produits digitaux propulsés par l&apos;IA
           </Badge>
-          <h1 className="max-w-3xl text-balance text-4xl font-bold tracking-tight sm:text-6xl">
+          <h1 className="max-w-3xl text-balance text-4xl font-bold leading-[1.05] tracking-tighter sm:text-6xl lg:text-7xl">
             Automatise ton business avec des produits{" "}
             <span className="text-gradient-brand">prêts à l&apos;emploi</span>
           </h1>
-          <p className="max-w-xl text-balance text-lg text-muted-foreground">
+          <p className="max-w-xl text-balance text-lg leading-relaxed text-muted-foreground">
             Workflows n8n, prompts IA et formations conçus pour te faire gagner
             du temps dès aujourd&apos;hui.
           </p>
@@ -94,8 +94,10 @@ export default async function HomePage() {
               <div className="flex size-9 items-center justify-center rounded-lg bg-primary/10 text-primary">
                 <feature.icon className="size-4.5" />
               </div>
-              <h3 className="font-heading font-medium">{feature.title}</h3>
-              <p className="text-sm text-muted-foreground">
+              <h3 className="font-heading font-semibold tracking-tight">
+                {feature.title}
+              </h3>
+              <p className="text-sm leading-relaxed text-muted-foreground">
                 {feature.description}
               </p>
             </div>
@@ -109,7 +111,7 @@ export default async function HomePage() {
           <div className="mx-auto max-w-6xl px-4 sm:px-6">
             <div className="mb-8 flex items-end justify-between">
               <div>
-                <h2 className="text-2xl font-bold tracking-tight">
+                <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">
                   Catégories populaires
                 </h2>
                 <p className="mt-1 text-muted-foreground">
@@ -144,7 +146,7 @@ export default async function HomePage() {
           <div className="mx-auto max-w-6xl px-4 sm:px-6">
             <div className="mb-8 flex items-end justify-between">
               <div>
-                <h2 className="text-2xl font-bold tracking-tight">
+                <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">
                   Nouveautés
                 </h2>
                 <p className="mt-1 text-muted-foreground">

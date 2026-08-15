@@ -108,15 +108,17 @@ export default async function ProductPage({
             <Badge variant="secondary" className="w-fit">
               {product.category.name}
             </Badge>
-            <h1 className="text-3xl font-bold tracking-tight">
+            <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
               {product.name}
             </h1>
-            <p className="text-lg text-muted-foreground">
+            <p className="text-lg leading-relaxed text-muted-foreground">
               {product.description}
             </p>
           </div>
 
-          <div className="text-3xl font-bold">{formatPrice(product.price)}</div>
+          <div className="text-3xl font-bold tabular-nums">
+            {formatPrice(product.price)}
+          </div>
 
           <AddToCartButton
             productId={product.id}

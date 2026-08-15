@@ -28,15 +28,17 @@ export function ProductCard({ product }: { product: ProductCardData }) {
           <Badge variant="secondary" className="w-fit">
             {product.category.name}
           </Badge>
-          <h3 className="line-clamp-1 font-heading font-medium">
+          <h3 className="line-clamp-1 font-heading font-semibold tracking-tight">
             {product.name}
           </h3>
-          <p className="line-clamp-2 text-sm text-muted-foreground">
+          <p className="line-clamp-2 text-sm leading-relaxed text-muted-foreground">
             {product.description}
           </p>
         </CardContent>
         <CardFooter className="mt-3 flex items-center justify-between border-t px-4 py-3">
-          <span className="font-semibold">{formatPrice(product.price)}</span>
+          <span className="font-semibold tabular-nums">
+            {formatPrice(product.price)}
+          </span>
           <span className="text-sm font-medium text-primary opacity-0 transition-opacity group-hover:opacity-100">
             Voir le produit →
           </span>
