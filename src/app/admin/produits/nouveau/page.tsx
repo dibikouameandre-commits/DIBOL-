@@ -13,10 +13,6 @@ export default async function NewProductPage() {
     select: { id: true, name: true },
   });
 
-  console.log(
-    `[DIAG nouveau/page.tsx] categories fetched: count=${categories.length} data=${JSON.stringify(categories)} at ${new Date().toISOString()}`
-  );
-
   return (
     <div className="flex flex-col gap-6">
       <div>

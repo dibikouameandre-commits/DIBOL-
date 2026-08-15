@@ -41,12 +41,6 @@ export function ProductForm({
   const router = useRouter();
   const isEdit = !!product;
 
-  if (typeof window !== "undefined") {
-    console.log(
-      `[DIAG ProductForm] isEdit=${isEdit} categories received: count=${categories.length} data=${JSON.stringify(categories)} at ${new Date().toISOString()}`
-    );
-  }
-
   const action = async (_prev: FormState, formData: FormData): Promise<FormState> => {
     if (isEdit) {
       return updateProduct(product.id, formData);
