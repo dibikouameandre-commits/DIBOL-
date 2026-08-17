@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 import { requireAdmin } from "@/server/admin/guard";
 import { prisma } from "@/lib/prisma";
-import { ProductForm } from "../product-form";
+import { ProductForm } from "@/app/admin/produits/product-form";
 
 export const metadata: Metadata = { title: "Nouveau produit — Admin" };
 
