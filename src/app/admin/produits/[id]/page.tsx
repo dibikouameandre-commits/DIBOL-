@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
-import { requireAdmin } from "@/server/admin/guard";
+import { requireSuperAdmin } from "@/server/admin/guard";
 import { prisma } from "@/lib/prisma";
 import { getProductForEdit } from "@/server/admin/products";
 import { ProductForm } from "../product-form";
@@ -13,7 +13,7 @@ export default async function EditProductPage({
 }: {
   params: Promise<{ id: string }>;
 }) {
-  await requireAdmin();
+  await requireSuperAdmin();
   const { id } = await params;
 
   const [product, categories] = await Promise.all([

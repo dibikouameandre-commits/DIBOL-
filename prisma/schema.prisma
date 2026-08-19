@@ -10,6 +10,8 @@ datasource db {
 enum Role {
   CLIENT
   ADMIN
+  SUPER_ADMIN
+  COMPANY_ADMIN
 }
 
 enum OrderStatus {
@@ -17,6 +19,21 @@ enum OrderStatus {
   PAID
   CANCELED
   REFUNDED
+}
+
+// --- Multi-entreprise ---
+
+model Company {
+  id        String   @id @default(cuid())
+  name      String
+  slug      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  users      User[]
+  categories Category[]
+  products   Product[]
+  orders     Order[]
 }
 
 // --- Auth.js models ---
@@ -29,6 +46,11 @@ model User {
   image         String?
   password      String?
   role          Role      @default(CLIENT)
+  tokenVersion  Int       @default(0)
+  isActive      Boolean   @default(true)
+
+  companyId String?
+  company   Company? @relation(fields: [companyId], references: [id])
 
   accounts Account[]
   sessions Session[]
@@ -83,6 +105,9 @@ model Category {
   description String?
   imageUrl    String?
 
+  companyId String?
+  company   Company? @relation(fields: [companyId], references: [id])
+
   products Product[]
 
   createdAt DateTime @default(now())
@@ -103,6 +128,9 @@ model Product {
   categoryId String
   category   Category @relation(fields: [categoryId], references: [id])
 
+  companyId String?
+  company   Company? @relation(fields: [companyId], references: [id])
+
   orderItems OrderItem[]
 
   createdAt DateTime @default(now())
@@ -117,6 +145,10 @@ model Order {
   id                    String      @id @default(cuid())
   userId                String
   user                  User        @relation(fields: [userId], references: [id])
+
+  companyId String?
+  company   Company? @relation(fields: [companyId], references: [id])
+
   status                OrderStatus @default(PENDING)
   total                 Decimal     @db.Decimal(10, 2)
   stripeSessionId       String?     @unique

@@ -15,11 +15,13 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import type { Role } from "@/generated/prisma/enums";
+import { isCompanyAdmin, isSuperAdmin } from "@/lib/roles";
 
 type AccountUser = {
   name?: string | null;
   email?: string | null;
-  role: "CLIENT" | "ADMIN";
+  role: Role;
 };
 
 function initials(name?: string | null, email?: string | null) {
@@ -32,9 +34,26 @@ function initials(name?: string | null, email?: string | null) {
     .toUpperCase();
 }
 
-export function AccountMenu({ user }: { user: AccountUser }) {
+export function AccountMenu({
+  user,
+  companySlug,
+}: {
+  user: AccountUser;
+  // Resolved server-side from the user's own companyId (see
+  // getCompanySlugById) — never trust a slug from the current page's URL,
+  // it may not be the company this user actually belongs to.
+  companySlug?: string | null;
+}) {
   const router = useRouter();
-  const dashboardHref = user.role === "ADMIN" ? "/admin" : "/dashboard";
+  const isCompanyAdminWithSlug = isCompanyAdmin(user.role) && !!companySlug;
+
+  const dashboardHref = isSuperAdmin(user.role)
+    ? "/admin"
+    : isCompanyAdminWithSlug
+      ? `/${companySlug}/admin`
+      : "/dashboard";
+
+  const isAdminSpace = isSuperAdmin(user.role) || isCompanyAdminWithSlug;
 
   return (
     <DropdownMenu>
@@ -55,8 +74,8 @@ export function AccountMenu({ user }: { user: AccountUser }) {
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem render={<Link href={dashboardHref} />}>
-            {user.role === "ADMIN" ? <ShieldCheck /> : <LayoutDashboard />}
-            {user.role === "ADMIN" ? "Espace admin" : "Mon dashboard"}
+            {isAdminSpace ? <ShieldCheck /> : <LayoutDashboard />}
+            {isAdminSpace ? "Espace admin" : "Mon dashboard"}
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />

@@ -3,13 +3,14 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
-import { requireAdmin } from "@/server/admin/guard";
+import { requireSuperAdmin } from "@/server/admin/guard";
 import { prisma } from "@/lib/prisma";
 import { deleteProductFile, saveProductFile } from "@/lib/storage";
 import { productSchema } from "@/lib/validations/product";
+import { getDefaultCompanyId } from "@/server/company";
 
 export async function getAllProducts() {
-  await requireAdmin();
+  await requireSuperAdmin();
   return prisma.product.findMany({
     include: { category: true },
     orderBy: { createdAt: "desc" },
@@ -17,7 +18,7 @@ export async function getAllProducts() {
 }
 
 export async function getProductForEdit(id: string) {
-  await requireAdmin();
+  await requireSuperAdmin();
   return prisma.product.findUnique({ where: { id } });
 }
 
@@ -35,11 +36,19 @@ function parseProductForm(formData: FormData) {
 }
 
 export async function createProduct(formData: FormData): Promise<ActionResult> {
-  await requireAdmin();
+  await requireSuperAdmin();
 
   const parsed = parseProductForm(formData);
   if (!parsed.success) {
     return { success: false, error: parsed.error.issues[0]?.message ?? "Données invalides" };
+  }
+
+  const companyId = await getDefaultCompanyId();
+  if (!companyId) {
+    return {
+      success: false,
+      error: "Entreprise par défaut introuvable — impossible de créer le produit.",
+    };
   }
 
   const existing = await prisma.product.findUnique({
@@ -60,7 +69,7 @@ export async function createProduct(formData: FormData): Promise<ActionResult> {
   }
 
   const product = await prisma.product.create({
-    data: { ...parsed.data, fileKey, fileName },
+    data: { ...parsed.data, fileKey, fileName, companyId },
   });
 
   revalidatePath("/admin/produits");
@@ -73,7 +82,7 @@ export async function updateProduct(
   id: string,
   formData: FormData
 ): Promise<ActionResult> {
-  await requireAdmin();
+  await requireSuperAdmin();
 
   const parsed = parseProductForm(formData);
   if (!parsed.success) {
@@ -118,7 +127,7 @@ export async function updateProduct(
 }
 
 export async function toggleProductPublished(id: string): Promise<ActionResult> {
-  await requireAdmin();
+  await requireSuperAdmin();
 
   const product = await prisma.product.findUnique({ where: { id } });
   if (!product) {
@@ -137,7 +146,7 @@ export async function toggleProductPublished(id: string): Promise<ActionResult> 
 }
 
 export async function deleteProduct(id: string): Promise<ActionResult> {
-  await requireAdmin();
+  await requireSuperAdmin();
 
   const product = await prisma.product.findUnique({ where: { id } });
   if (!product) {

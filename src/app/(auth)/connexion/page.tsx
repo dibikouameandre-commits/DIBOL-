@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Suspense } from "react";
 
 import {
   Card,
@@ -25,7 +26,9 @@ export default function ConnexionPage() {
         </CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
-        <LoginForm />
+        <Suspense fallback={null}>
+          <LoginForm />
+        </Suspense>
         <p className="text-center text-sm text-muted-foreground">
           Pas encore de compte ?{" "}
           <Link href="/inscription" className="font-medium text-foreground underline underline-offset-4">

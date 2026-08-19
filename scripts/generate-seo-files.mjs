@@ -21,8 +21,19 @@ const { neon } = await import("@neondatabase/serverless");
 const siteUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
 const sql = neon(process.env.DATABASE_URL);
 
-const products = await sql`SELECT slug FROM "Product" WHERE "isPublished" = true`;
-const categories = await sql`SELECT slug FROM "Category"`;
+// The global, un-prefixed public routes (/produits/[slug], /boutique) only
+// ever show "Entreprise par défaut" (see src/server/catalog.ts) — the
+// sitemap must match exactly, or it advertises URLs from other companies
+// that 404 on the real site.
+const [defaultCompany] = await sql`SELECT id FROM "Company" WHERE slug = 'default'`;
+const defaultCompanyId = defaultCompany?.id ?? null;
+
+const products = defaultCompanyId
+  ? await sql`SELECT slug FROM "Product" WHERE "isPublished" = true AND "companyId" = ${defaultCompanyId}`
+  : [];
+const categories = defaultCompanyId
+  ? await sql`SELECT slug FROM "Category" WHERE "companyId" = ${defaultCompanyId}`
+  : [];
 
 const staticRoutes = ["", "/boutique", "/categories", "/connexion", "/inscription"];
 

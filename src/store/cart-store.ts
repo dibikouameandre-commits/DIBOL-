@@ -8,6 +8,10 @@ export type CartItem = {
   price: string;
   categorySlug: string;
   quantity: number;
+  // undefined = the shared/global storefront's cart, unchanged from before
+  // company-scoping existed. Set only for an item added from a company's
+  // own storefront (`/[entreprise]/...`).
+  companySlug?: string;
 };
 
 type CartState = {
@@ -24,13 +28,21 @@ export const useCartStore = create<CartState>()(
       items: [],
       addItem: (item) =>
         set((state) => {
-          const existing = state.items.find(
-            (i) => i.productId === item.productId
-          );
+          // A cart can only ever hold items from one storefront context at
+          // a time (undefined counts as its own context, the shared/global
+          // storefront) — adding from a different one starts a fresh cart
+          // instead of silently mixing two companies' products together.
+          const currentContext = state.items[0]?.companySlug;
+          const items =
+            state.items.length > 0 && currentContext !== item.companySlug
+              ? []
+              : state.items;
+
+          const existing = items.find((i) => i.productId === item.productId);
 
           if (existing) {
             return {
-              items: state.items.map((i) =>
+              items: items.map((i) =>
                 i.productId === item.productId
                   ? { ...i, quantity: i.quantity + 1 }
                   : i
@@ -38,7 +50,7 @@ export const useCartStore = create<CartState>()(
             };
           }
 
-          return { items: [...state.items, { ...item, quantity: 1 }] };
+          return { items: [...items, { ...item, quantity: 1 }] };
         }),
       removeItem: (productId) =>
         set((state) => ({

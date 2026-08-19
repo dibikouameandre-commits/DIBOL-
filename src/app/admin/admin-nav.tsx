@@ -9,12 +9,14 @@ import {
   ShoppingCart,
   Users,
   BarChart3,
+  Building2,
 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
 const items = [
   { href: "/admin", label: "Vue d'ensemble", icon: LayoutDashboard, exact: true },
+  { href: "/admin/entreprises", label: "Entreprises", icon: Building2 },
   { href: "/admin/produits", label: "Produits", icon: Package },
   { href: "/admin/categories", label: "Catégories", icon: FolderTree },
   { href: "/admin/commandes", label: "Commandes", icon: ShoppingCart },

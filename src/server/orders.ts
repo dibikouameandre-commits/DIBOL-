@@ -1,8 +1,14 @@
 import { prisma } from "@/lib/prisma";
+import { getCompanyBySlug } from "@/server/company";
 
 export class EmptyCartError extends Error {}
 export class InvalidProductError extends Error {}
 
+// The global cart/checkout represents "Entreprise par défaut" — same
+// reasoning as src/server/catalog.ts. A product id that doesn't belong to
+// that company (e.g. a stale cart item from a different company's context)
+// is excluded here, tripping the same "no longer available" error a
+// deleted/unpublished product would.
 export async function createPendingOrder(
   userId: string,
   items: { productId: string; quantity: number }[]
@@ -11,9 +17,14 @@ export async function createPendingOrder(
     throw new EmptyCartError("Le panier est vide");
   }
 
+  const defaultCompany = await getCompanyBySlug("default");
+  if (!defaultCompany) {
+    throw new InvalidProductError("La boutique n'est pas disponible pour le moment.");
+  }
+
   const productIds = items.map((item) => item.productId);
   const products = await prisma.product.findMany({
-    where: { id: { in: productIds }, isPublished: true },
+    where: { id: { in: productIds }, isPublished: true, companyId: defaultCompany.id },
   });
 
   if (products.length !== productIds.length) {
@@ -39,6 +50,7 @@ export async function createPendingOrder(
   return prisma.order.create({
     data: {
       userId,
+      companyId: defaultCompany.id,
       total,
       items: { create: orderItems },
     },

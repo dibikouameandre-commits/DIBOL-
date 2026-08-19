@@ -1,9 +1,9 @@
 import Link from "next/link";
 
-import { auth } from "@/lib/auth";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { siteConfig } from "@/config/site";
+import { requireSuperAdmin } from "@/server/admin/guard";
 import { SignOutButton } from "@/components/auth/sign-out-button";
 import { AdminNav } from "./admin-nav";
 import { MobileAdminNav } from "./mobile-admin-nav";
@@ -13,7 +13,13 @@ export default async function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const session = await auth();
+  // This layout has no loading.tsx ancestor (unlike the (with-loading)
+  // group nested under it), so a redirect() here commits a real HTTP
+  // status — closing the narrow gap where a non-browser client with a
+  // just-revoked session could otherwise see one streamed 200 response
+  // before a page-level guard's redirect took effect. Matches the pattern
+  // already used by CompanyAdminLayout (src/app/[entreprise]/admin/layout.tsx).
+  const session = await requireSuperAdmin();
 
   return (
     <div className="flex min-h-screen flex-col lg:flex-row">

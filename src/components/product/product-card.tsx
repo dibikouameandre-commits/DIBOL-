@@ -17,9 +17,15 @@ export type ProductCardData = {
   };
 };
 
-export function ProductCard({ product }: { product: ProductCardData }) {
+export function ProductCard({
+  product,
+  basePath = "",
+}: {
+  product: ProductCardData;
+  basePath?: string;
+}) {
   return (
-    <Link href={`/produits/${product.slug}`} className="group block h-full">
+    <Link href={`${basePath}/produits/${product.slug}`} className="group block h-full">
       <Card className="h-full gap-0 rounded-2xl py-0 shadow-sm ring-1 ring-foreground/10 transition-all duration-300 ease-out group-hover:-translate-y-1 group-hover:shadow-xl group-hover:ring-primary/40">
         <ProductThumbnail
           categorySlug={product.category.slug}

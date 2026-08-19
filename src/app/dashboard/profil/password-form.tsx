@@ -1,8 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { signOut } from "next-auth/react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
@@ -15,12 +17,12 @@ import {
 } from "@/lib/validations/profile";
 
 export function PasswordForm() {
+  const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const {
     register,
     handleSubmit,
-    reset,
     formState: { errors },
   } = useForm<ChangePasswordValues>({
     resolver: zodResolver(changePasswordSchema),
@@ -29,15 +31,19 @@ export function PasswordForm() {
   const onSubmit = async (values: ChangePasswordValues) => {
     setIsSubmitting(true);
     const result = await changePassword(values);
-    setIsSubmitting(false);
 
     if (!result.success) {
+      setIsSubmitting(false);
       toast.error(result.error);
       return;
     }
 
-    toast.success("Mot de passe mis à jour");
-    reset();
+    // Changing the password invalidates every active session, including
+    // this one — sign out here explicitly instead of leaving the user
+    // with a stale session that fails unpredictably on their next click.
+    toast.success("Mot de passe mis à jour. Reconnecte-toi.");
+    await signOut({ redirect: false });
+    router.push("/connexion");
   };
 
   return (

@@ -3,7 +3,9 @@ import Link from "next/link";
 import { auth } from "@/lib/auth";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { isCompanyAdmin } from "@/lib/roles";
 import { siteConfig } from "@/config/site";
+import { getCompanySlugById } from "@/server/company";
 import { AccountMenu } from "@/components/layout/account-menu";
 import { MobileNav } from "@/components/layout/mobile-nav";
 import { SiteHeaderShell } from "@/components/layout/site-header-shell";
@@ -12,6 +14,10 @@ import { CartButton } from "@/components/cart/cart-button";
 
 export async function SiteHeader() {
   const session = await auth();
+  const companySlug =
+    session?.user && isCompanyAdmin(session.user.role) && session.user.companyId
+      ? await getCompanySlugById(session.user.companyId)
+      : null;
 
   return (
     <SiteHeaderShell>
@@ -43,7 +49,7 @@ export async function SiteHeader() {
             <ThemeToggle />
           </div>
           {session?.user ? (
-            <AccountMenu user={session.user} />
+            <AccountMenu user={session.user} companySlug={companySlug} />
           ) : (
             <div className="hidden items-center gap-2 sm:flex">
               <Link

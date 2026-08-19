@@ -4,6 +4,7 @@ import bcrypt from "bcryptjs";
 
 import { prisma } from "@/lib/prisma";
 import { registerSchema, type RegisterValues } from "@/lib/validations/auth";
+import { createAndSendVerificationEmail } from "@/server/email-verification";
 
 type RegisterResult =
   | { success: true }
@@ -35,6 +36,14 @@ export async function registerUser(
       password: hashedPassword,
     },
   });
+
+  try {
+    await createAndSendVerificationEmail(email);
+  } catch (error) {
+    // Verification email is best-effort: registration must still succeed
+    // even if token creation or sending fails.
+    console.error("Failed to send verification email:", error);
+  }
 
   return { success: true };
 }

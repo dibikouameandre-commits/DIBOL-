@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { getSession, signIn } from "next-auth/react";
@@ -11,9 +12,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { loginSchema, type LoginValues } from "@/lib/validations/auth";
+import { isSuperAdmin } from "@/lib/roles";
+import { safeRedirectTarget } from "@/lib/safe-redirect";
 
 export function LoginForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const {
@@ -41,7 +45,13 @@ export function LoginForm() {
 
     const session = await getSession();
     toast.success("Connexion réussie");
-    router.push(session?.user.role === "ADMIN" ? "/admin" : "/dashboard");
+    const from = safeRedirectTarget(searchParams.get("from"));
+    router.push(
+      from ??
+        (session?.user.role && isSuperAdmin(session.user.role)
+          ? "/admin"
+          : "/dashboard")
+    );
     router.refresh();
   };
 
@@ -60,7 +70,15 @@ export function LoginForm() {
         )}
       </div>
       <div className="flex flex-col gap-1.5">
-        <Label htmlFor="password">Mot de passe</Label>
+        <div className="flex items-center justify-between">
+          <Label htmlFor="password">Mot de passe</Label>
+          <Link
+            href="/mot-de-passe-oublie"
+            className="text-xs font-medium text-muted-foreground hover:text-foreground hover:underline underline-offset-4"
+          >
+            Mot de passe oublié ?
+          </Link>
+        </div>
         <Input id="password" type="password" {...register("password")} />
         {errors.password && (
           <p className="text-sm text-destructive">{errors.password.message}</p>

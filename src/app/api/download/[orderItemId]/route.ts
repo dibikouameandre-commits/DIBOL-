@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { readProductFile } from "@/lib/storage";
+import { isSuperAdmin } from "@/lib/roles";
 
 export async function GET(
   _req: Request,
@@ -25,7 +26,7 @@ export async function GET(
   }
 
   const isOwner = orderItem.order.userId === session.user.id;
-  const isAdmin = session.user.role === "ADMIN";
+  const isAdmin = isSuperAdmin(session.user.role);
 
   if (!isOwner && !isAdmin) {
     return NextResponse.json({ error: "Accès refusé" }, { status: 403 });

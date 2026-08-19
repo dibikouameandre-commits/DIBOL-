@@ -76,7 +76,7 @@ export async function changePassword(
 
   await prisma.user.update({
     where: { id: session.user.id },
-    data: { password: hashedPassword },
+    data: { password: hashedPassword, tokenVersion: { increment: 1 } },
   });
 
   return { success: true };

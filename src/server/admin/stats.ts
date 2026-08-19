@@ -1,8 +1,8 @@
-import { requireAdmin } from "@/server/admin/guard";
+import { requireSuperAdmin } from "@/server/admin/guard";
 import { prisma } from "@/lib/prisma";
 
 export async function getDashboardStats() {
-  await requireAdmin();
+  await requireSuperAdmin();
 
   const [
     revenueAgg,

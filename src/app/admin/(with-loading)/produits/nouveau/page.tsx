@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
 
-import { requireAdmin } from "@/server/admin/guard";
+import { requireSuperAdmin } from "@/server/admin/guard";
 import { prisma } from "@/lib/prisma";
 import { ProductForm } from "@/app/admin/produits/product-form";
 
 export const metadata: Metadata = { title: "Nouveau produit — Admin" };
 
 export default async function NewProductPage() {
-  await requireAdmin();
+  await requireSuperAdmin();
   const categories = await prisma.category.findMany({
     orderBy: { name: "asc" },
     select: { id: true, name: true },

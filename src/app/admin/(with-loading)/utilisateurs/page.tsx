@@ -11,12 +11,25 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { getAllUsers } from "@/server/admin/users";
-import { RoleToggleButton } from "./role-toggle-button";
+import { getAllCompanies } from "@/server/admin/companies";
+import { isSuperAdmin, isCompanyAdmin } from "@/lib/roles";
+import type { Role } from "@/generated/prisma/enums";
+import { RoleSelect } from "./role-select";
+
+function roleLabel(role: Role) {
+  if (isSuperAdmin(role)) return "Admin";
+  if (isCompanyAdmin(role)) return "Admin d'entreprise";
+  return "Client";
+}
 
 export const metadata: Metadata = { title: "Utilisateurs — Admin" };
 
 export default async function AdminUsersPage() {
-  const [users, session] = await Promise.all([getAllUsers(), auth()]);
+  const [users, companies, session] = await Promise.all([
+    getAllUsers(),
+    getAllCompanies(),
+    auth(),
+  ]);
 
   return (
     <div className="flex flex-col gap-6">
@@ -33,6 +46,7 @@ export default async function AdminUsersPage() {
             <TableRow>
               <TableHead>Utilisateur</TableHead>
               <TableHead>Rôle</TableHead>
+              <TableHead>Entreprise</TableHead>
               <TableHead>Commandes</TableHead>
               <TableHead>Inscrit le</TableHead>
               <TableHead className="text-right">Actions</TableHead>
@@ -50,9 +64,12 @@ export default async function AdminUsersPage() {
                   </div>
                 </TableCell>
                 <TableCell>
-                  <Badge variant={user.role === "ADMIN" ? "default" : "outline"}>
-                    {user.role === "ADMIN" ? "Admin" : "Client"}
+                  <Badge variant={isSuperAdmin(user.role) ? "default" : "outline"}>
+                    {roleLabel(user.role)}
                   </Badge>
+                </TableCell>
+                <TableCell className="text-muted-foreground">
+                  {user.company?.name ?? "—"}
                 </TableCell>
                 <TableCell>{user._count.orders}</TableCell>
                 <TableCell className="text-muted-foreground">
@@ -62,7 +79,12 @@ export default async function AdminUsersPage() {
                 </TableCell>
                 <TableCell className="text-right">
                   {session?.user.id !== user.id && (
-                    <RoleToggleButton userId={user.id} role={user.role} />
+                    <RoleSelect
+                      userId={user.id}
+                      role={user.role}
+                      companyId={user.companyId}
+                      companies={companies}
+                    />
                   )}
                 </TableCell>
               </TableRow>

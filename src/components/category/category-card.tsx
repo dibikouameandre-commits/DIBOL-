@@ -9,14 +9,16 @@ export function CategoryCard({
   name,
   description,
   productCount,
+  basePath = "",
 }: {
   slug: string;
   name: string;
   description: string | null;
   productCount: number;
+  basePath?: string;
 }) {
   return (
-    <Link href={`/boutique?categorie=${slug}`} className="group block h-full">
+    <Link href={`${basePath}/boutique?categorie=${slug}`} className="group block h-full">
       <Card className="h-full gap-0 rounded-2xl py-0 shadow-sm ring-1 ring-foreground/10 transition-all duration-300 ease-out group-hover:-translate-y-1 group-hover:shadow-xl group-hover:ring-primary/40">
         <ProductThumbnail
           categorySlug={slug}
