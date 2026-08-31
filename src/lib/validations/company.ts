@@ -23,6 +23,7 @@ const RESERVED_SLUGS = new Set([
   "panier",
   "commande",
   "produits",
+  "outils",
 ]);
 
 export const companySchema = z.object({

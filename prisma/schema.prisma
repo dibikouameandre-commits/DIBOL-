@@ -55,6 +55,7 @@ model User {
   accounts Account[]
   sessions Session[]
   orders   Order[]
+  toolRuns ToolRun[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -176,4 +177,45 @@ model OrderItem {
 
   @@index([orderId])
   @@index([productId])
+}
+
+// --- Outils IA gratuits (DIBOL AI V2, Phase 1) ---
+// Global à la plateforme, jamais rattaché à une Company : ce sont des
+// produits DIBOL AI eux-mêmes, pas du catalogue vendu par une entreprise
+// cliente. Le registre des outils (nom, description, quota) vit en code
+// (src/lib/tools/registry.ts), pas en base — ajouter un outil n'a donc pas
+// besoin de migration ; toolSlug est juste une clé de référence.
+
+model ToolRun {
+  id       String @id @default(cuid())
+  toolSlug String
+
+  // Un visiteur peut utiliser un outil sans compte — userId est nullable.
+  // anonId/ipHash permettent quand même la limite anti-abus dans ce cas.
+  userId String?
+  user   User?   @relation(fields: [userId], references: [id])
+  anonId String
+  // Jamais l'IP en clair — seulement un hash, suffisant pour compter sans
+  // stocker une donnée personnelle directement identifiante.
+  ipHash String
+
+  createdAt DateTime @default(now())
+
+  result ToolResult?
+
+  @@index([toolSlug, anonId, createdAt])
+  @@index([toolSlug, ipHash, createdAt])
+}
+
+model ToolResult {
+  id        String    @id @default(cuid())
+  runId     String    @unique
+  run       ToolRun   @relation(fields: [runId], references: [id], onDelete: Cascade)
+  // Identifiant de partage non séquentiel (pas l'id de la ligne) — voir
+  // src/lib/tokens.ts pour la génération, même pattern que les tokens de
+  // vérification email/réinitialisation de mot de passe.
+  shareSlug String    @unique
+  content   Json
+  expiresAt DateTime?
+  createdAt DateTime  @default(now())
 }

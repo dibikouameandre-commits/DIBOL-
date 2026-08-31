@@ -2,78 +2,138 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>http://localhost:3000</loc>
-    <lastmod>2026-08-19T18:09:30.624Z</lastmod>
+    <lastmod>2026-08-31T19:53:01.113Z</lastmod>
   </url>
   <url>
     <loc>http://localhost:3000/boutique</loc>
-    <lastmod>2026-08-19T18:09:30.624Z</lastmod>
+    <lastmod>2026-08-31T19:53:01.113Z</lastmod>
   </url>
   <url>
     <loc>http://localhost:3000/categories</loc>
-    <lastmod>2026-08-19T18:09:30.624Z</lastmod>
+    <lastmod>2026-08-31T19:53:01.113Z</lastmod>
   </url>
   <url>
     <loc>http://localhost:3000/connexion</loc>
-    <lastmod>2026-08-19T18:09:30.624Z</lastmod>
+    <lastmod>2026-08-31T19:53:01.113Z</lastmod>
   </url>
   <url>
     <loc>http://localhost:3000/inscription</loc>
-    <lastmod>2026-08-19T18:09:30.624Z</lastmod>
+    <lastmod>2026-08-31T19:53:01.113Z</lastmod>
+  </url>
+  <url>
+    <loc>http://localhost:3000/outils</loc>
+    <lastmod>2026-08-31T19:53:01.113Z</lastmod>
+  </url>
+  <url>
+    <loc>http://localhost:3000/outils/generateur-cv</loc>
+    <lastmod>2026-08-31T19:53:01.113Z</lastmod>
+  </url>
+  <url>
+    <loc>http://localhost:3000/outils/lettre-motivation</loc>
+    <lastmod>2026-08-31T19:53:01.113Z</lastmod>
+  </url>
+  <url>
+    <loc>http://localhost:3000/outils/facture-devis</loc>
+    <lastmod>2026-08-31T19:53:01.113Z</lastmod>
+  </url>
+  <url>
+    <loc>http://localhost:3000/outils/email-professionnel</loc>
+    <lastmod>2026-08-31T19:53:01.113Z</lastmod>
+  </url>
+  <url>
+    <loc>http://localhost:3000/outils/lettre-administrative</loc>
+    <lastmod>2026-08-31T19:53:01.113Z</lastmod>
+  </url>
+  <url>
+    <loc>http://localhost:3000/outils/posts-reseaux-sociaux</loc>
+    <lastmod>2026-08-31T19:53:01.113Z</lastmod>
+  </url>
+  <url>
+    <loc>http://localhost:3000/outils/prompts-ia</loc>
+    <lastmod>2026-08-31T19:53:01.113Z</lastmod>
+  </url>
+  <url>
+    <loc>http://localhost:3000/outils/nom-entreprise-slogan</loc>
+    <lastmod>2026-08-31T19:53:01.113Z</lastmod>
+  </url>
+  <url>
+    <loc>http://localhost:3000/outils/business-plan</loc>
+    <lastmod>2026-08-31T19:53:01.113Z</lastmod>
+  </url>
+  <url>
+    <loc>http://localhost:3000/outils/resume-document</loc>
+    <lastmod>2026-08-31T19:53:01.113Z</lastmod>
+  </url>
+  <url>
+    <loc>http://localhost:3000/outils/script-video</loc>
+    <lastmod>2026-08-31T19:53:01.113Z</lastmod>
+  </url>
+  <url>
+    <loc>http://localhost:3000/outils/calcul-prix-vente</loc>
+    <lastmod>2026-08-31T19:53:01.113Z</lastmod>
+  </url>
+  <url>
+    <loc>http://localhost:3000/outils/contrat-simple</loc>
+    <lastmod>2026-08-31T19:53:01.113Z</lastmod>
+  </url>
+  <url>
+    <loc>http://localhost:3000/outils/workflow-n8n</loc>
+    <lastmod>2026-08-31T19:53:01.113Z</lastmod>
   </url>
   <url>
     <loc>http://localhost:3000/produits/pack-50-workflows-n8n</loc>
-    <lastmod>2026-08-19T18:09:30.624Z</lastmod>
+    <lastmod>2026-08-31T19:53:01.113Z</lastmod>
   </url>
   <url>
     <loc>http://localhost:3000/produits/automatisation-rh-n8n-ia</loc>
-    <lastmod>2026-08-19T18:09:30.624Z</lastmod>
+    <lastmod>2026-08-31T19:53:01.113Z</lastmod>
   </url>
   <url>
     <loc>http://localhost:3000/produits/generateur-contrats-automatise</loc>
-    <lastmod>2026-08-19T18:09:30.624Z</lastmod>
+    <lastmod>2026-08-31T19:53:01.113Z</lastmod>
   </url>
   <url>
     <loc>http://localhost:3000/produits/banque-500-prompts-chatgpt</loc>
-    <lastmod>2026-08-19T18:09:30.624Z</lastmod>
+    <lastmod>2026-08-31T19:53:01.113Z</lastmod>
   </url>
   <url>
     <loc>http://localhost:3000/produits/prompts-icp-clients-ideaux</loc>
-    <lastmod>2026-08-19T18:09:30.624Z</lastmod>
+    <lastmod>2026-08-31T19:53:01.113Z</lastmod>
   </url>
   <url>
     <loc>http://localhost:3000/produits/top-100-prompts-contenu</loc>
-    <lastmod>2026-08-19T18:09:30.624Z</lastmod>
+    <lastmod>2026-08-31T19:53:01.113Z</lastmod>
   </url>
   <url>
     <loc>http://localhost:3000/produits/formation-automatisation-ia</loc>
-    <lastmod>2026-08-19T18:09:30.624Z</lastmod>
+    <lastmod>2026-08-31T19:53:01.113Z</lastmod>
   </url>
   <url>
     <loc>http://localhost:3000/produits/masterclass-ia-entrepreneurs</loc>
-    <lastmod>2026-08-19T18:09:30.624Z</lastmod>
+    <lastmod>2026-08-31T19:53:01.113Z</lastmod>
   </url>
   <url>
     <loc>http://localhost:3000/produits/kit-generation-leads-ia</loc>
-    <lastmod>2026-08-19T18:09:30.624Z</lastmod>
+    <lastmod>2026-08-31T19:53:01.113Z</lastmod>
   </url>
   <url>
     <loc>http://localhost:3000/produits/templates-planification-journaliere-ia</loc>
-    <lastmod>2026-08-19T18:09:30.624Z</lastmod>
+    <lastmod>2026-08-31T19:53:01.113Z</lastmod>
   </url>
   <url>
     <loc>http://localhost:3000/boutique?categorie=automatisation-n8n</loc>
-    <lastmod>2026-08-19T18:09:30.624Z</lastmod>
+    <lastmod>2026-08-31T19:53:01.113Z</lastmod>
   </url>
   <url>
     <loc>http://localhost:3000/boutique?categorie=prompts-ia</loc>
-    <lastmod>2026-08-19T18:09:30.624Z</lastmod>
+    <lastmod>2026-08-31T19:53:01.113Z</lastmod>
   </url>
   <url>
     <loc>http://localhost:3000/boutique?categorie=formations-ia</loc>
-    <lastmod>2026-08-19T18:09:30.624Z</lastmod>
+    <lastmod>2026-08-31T19:53:01.113Z</lastmod>
   </url>
   <url>
     <loc>http://localhost:3000/boutique?categorie=templates-workflows</loc>
-    <lastmod>2026-08-19T18:09:30.624Z</lastmod>
+    <lastmod>2026-08-31T19:53:01.113Z</lastmod>
   </url>
 </urlset>

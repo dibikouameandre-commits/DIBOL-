@@ -35,7 +35,36 @@ const categories = defaultCompanyId
   ? await sql`SELECT slug FROM "Category" WHERE "companyId" = ${defaultCompanyId}`
   : [];
 
-const staticRoutes = ["", "/boutique", "/categories", "/connexion", "/inscription"];
+// Mirrors the 14 slugs in src/lib/tools/registry.ts — duplicated here rather
+// than imported, since this script runs via plain `node` (no TS loader) at
+// build time. Only the tool's own page belongs in the sitemap: resultat/
+// and historique/ pages are all `robots: { index: false }` on purpose.
+const TOOL_SLUGS = [
+  "generateur-cv",
+  "lettre-motivation",
+  "facture-devis",
+  "email-professionnel",
+  "lettre-administrative",
+  "posts-reseaux-sociaux",
+  "prompts-ia",
+  "nom-entreprise-slogan",
+  "business-plan",
+  "resume-document",
+  "script-video",
+  "calcul-prix-vente",
+  "contrat-simple",
+  "workflow-n8n",
+];
+
+const staticRoutes = [
+  "",
+  "/boutique",
+  "/categories",
+  "/connexion",
+  "/inscription",
+  "/outils",
+  ...TOOL_SLUGS.map((slug) => `/outils/${slug}`),
+];
 
 const urls = [
   ...staticRoutes.map((route) => `${siteUrl}${route}`),
