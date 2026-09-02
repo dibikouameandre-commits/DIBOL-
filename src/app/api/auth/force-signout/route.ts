@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-
-import { signOut } from "@/lib/auth";
+import { cookies } from "next/headers";
 
 // Breaks the /admin <-> /connexion redirect loop: a stale session cookie
 // (tokenVersion/isActive mismatch, detected by auth.ts's jwt callback) can
@@ -8,16 +7,24 @@ import { signOut } from "@/lib/auth";
 // Component, which Next.js forbids from writing cookies — so the browser
 // kept the same "still valid" cookie that middleware.ts (Edge, no DB
 // access) would then bounce straight back to /admin. Route Handlers CAN
-// write cookies, so redirecting here first lets signOut() actually clear
-// it before the user ever lands back on /connexion.
+// write cookies, so redirecting here first clears it before the user ever
+// lands back on /connexion.
+//
+// Deletes the cookie directly rather than calling next-auth's signOut(),
+// which rebuilds an internal synthetic HTTP request out of this request's
+// cloned headers (see next-auth/lib/actions.js) — that reconstruction
+// returned a 400 "Bad request." in production while working locally,
+// likely a Node-runtime-sensitive edge case in that internal request
+// rebuilding. Deleting the cookie directly sidesteps that code path
+// entirely instead of chasing the exact cause further.
 export async function GET(req: NextRequest) {
   const from = req.nextUrl.searchParams.get("from") ?? "/connexion";
+  const cookieStore = await cookies();
 
-  // `redirect: false` clears the session cookie without letting signOut()
-  // compute its own redirect target — its internal URL resolution didn't
-  // reliably track the actual request origin, so the redirect is built
-  // here instead, the same way middleware.ts builds its own.
-  await signOut({ redirect: false });
+  // Auth.js prefixes the cookie name with "__Secure-" over HTTPS
+  // (production); no prefix over plain HTTP (local dev).
+  cookieStore.delete("authjs.session-token");
+  cookieStore.delete("__Secure-authjs.session-token");
 
   return NextResponse.redirect(
     new URL(`/connexion?from=${encodeURIComponent(from)}`, req.nextUrl.origin)
