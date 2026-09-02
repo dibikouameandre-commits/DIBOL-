@@ -8,7 +8,13 @@ export async function requireSuperAdmin() {
   const session = await auth();
 
   if (!session?.user) {
-    redirect("/connexion?from=/admin");
+    // Not just "never logged in" — this also fires when auth.ts's jwt
+    // callback invalidated a stale session (tokenVersion/isActive
+    // mismatch). Redirecting through force-signout actually clears the
+    // cookie (a Route Handler can; this Server Component can't), which is
+    // what stops middleware.ts from reading the same "still valid" cookie
+    // and bouncing straight back to /admin.
+    redirect("/api/auth/force-signout?from=/admin");
   }
 
   if (!isSuperAdmin(session.user.role)) {
@@ -26,7 +32,8 @@ export async function requireCompanyAdmin(companySlug: string) {
   const session = await auth();
 
   if (!session?.user) {
-    redirect(`/connexion?from=/${companySlug}/admin`);
+    // Same stale-cookie fix as requireSuperAdmin() above.
+    redirect(`/api/auth/force-signout?from=/${companySlug}/admin`);
   }
 
   const company = await prisma.company.findUnique({
