@@ -1,10 +1,8 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { ArrowRight, Sparkles } from "lucide-react";
+import { Sparkles } from "lucide-react";
 
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { TOOLS } from "@/lib/tools/registry";
+import { ToolCard } from "@/components/tool/tool-card";
 
 export const metadata: Metadata = {
   title: "Outils IA gratuits",
@@ -33,7 +31,7 @@ const AVAILABLE_SLUGS = new Set([
 
 export default function OutilsIndexPage() {
   return (
-    <div className="mx-auto max-w-5xl px-4 py-12 sm:px-6 sm:py-16">
+    <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
       <div className="mb-10 flex flex-col gap-3 text-center">
         <span className="mx-auto flex w-fit items-center gap-1.5 rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
           <Sparkles className="size-3.5" />
@@ -48,43 +46,14 @@ export default function OutilsIndexPage() {
         </p>
       </div>
 
-      <div className="grid gap-5 sm:grid-cols-2">
-        {TOOLS.map((tool) => {
-          const isAvailable = AVAILABLE_SLUGS.has(tool.slug);
-          const card = (
-            <Card
-              className={
-                isAvailable
-                  ? "h-full transition-shadow hover:shadow-md"
-                  : "h-full opacity-60"
-              }
-            >
-              <CardHeader>
-                <div className="flex items-center justify-between gap-2">
-                  <Badge variant="secondary">{tool.category}</Badge>
-                  {!isAvailable && <Badge variant="outline">Bientôt</Badge>}
-                </div>
-                <CardTitle className="mt-2">{tool.name}</CardTitle>
-                <CardDescription>{tool.description}</CardDescription>
-              </CardHeader>
-              {isAvailable && (
-                <CardContent>
-                  <span className="inline-flex items-center gap-1.5 text-sm font-medium text-primary">
-                    Essayer gratuitement <ArrowRight className="size-4" />
-                  </span>
-                </CardContent>
-              )}
-            </Card>
-          );
-
-          return isAvailable ? (
-            <Link key={tool.slug} href={`/outils/${tool.slug}`}>
-              {card}
-            </Link>
-          ) : (
-            <div key={tool.slug}>{card}</div>
-          );
-        })}
+      <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        {TOOLS.map((tool) => (
+          <ToolCard
+            key={tool.slug}
+            tool={tool}
+            available={AVAILABLE_SLUGS.has(tool.slug)}
+          />
+        ))}
       </div>
     </div>
   );

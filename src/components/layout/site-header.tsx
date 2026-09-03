@@ -26,8 +26,11 @@ export async function SiteHeader() {
           <MobileNav isAuthenticated={!!session?.user} />
           <Link
             href="/"
-            className="shrink-0 text-lg font-bold tracking-tight whitespace-nowrap"
+            className="flex shrink-0 items-center gap-2 text-lg font-bold tracking-tight whitespace-nowrap"
           >
+            <span className="flex size-6 items-center justify-center rounded-md bg-primary text-xs font-bold text-primary-foreground">
+              D
+            </span>
             {siteConfig.name}
           </Link>
           <nav className="hidden items-center gap-7 md:flex">

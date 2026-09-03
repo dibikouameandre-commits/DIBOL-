@@ -55,29 +55,30 @@ export default async function HomePage() {
         <div className="mx-auto flex max-w-6xl flex-col items-center gap-6 px-4 py-24 text-center sm:px-6 sm:py-32">
           <Badge variant="secondary" className="gap-1.5">
             <Sparkles className="size-3.5" />
-            Produits digitaux propulsés par l&apos;IA
+            14 outils gratuits, sans carte bancaire
           </Badge>
           <h1 className="max-w-3xl text-balance text-4xl font-bold leading-[1.05] tracking-tighter sm:text-6xl lg:text-7xl">
-            Automatise ton business avec des produits{" "}
-            <span className="text-gradient-brand">prêts à l&apos;emploi</span>
+            Des outils IA{" "}
+            <span className="text-gradient-brand">concrets</span> pour lancer
+            et faire grandir ton business
           </h1>
           <p className="max-w-xl text-balance text-lg leading-relaxed text-muted-foreground">
-            Workflows n8n, prompts IA et formations conçus pour te faire gagner
-            du temps dès aujourd&apos;hui.
+            CV, factures, contrats, plans d&apos;affaires : génère tes documents
+            professionnels en français en quelques minutes, gratuitement.
           </p>
           <div className="flex flex-wrap items-center justify-center gap-3">
             <Link
-              href="/boutique"
-              className={cn(buttonVariants({ size: "lg" }), "gap-1.5")}
+              href="/outils"
+              className={cn(buttonVariants({ size: "xl" }), "gap-1.5")}
             >
-              Explorer la boutique
+              Essayer un outil gratuitement
               <ArrowRight className="size-4" />
             </Link>
             <Link
-              href="/categories"
-              className={cn(buttonVariants({ variant: "outline", size: "lg" }))}
+              href="/boutique"
+              className={cn(buttonVariants({ variant: "outline", size: "xl" }))}
             >
-              Voir les catégories
+              Explorer la boutique
             </Link>
           </div>
         </div>
@@ -177,12 +178,13 @@ export default async function HomePage() {
               Prêt à automatiser ton business ?
             </h2>
             <p className="max-w-md text-primary-foreground/80">
-              Crée ton compte gratuitement et accède à toute la boutique.
+              Crée ton compte gratuitement et accède aux outils IA et à toute la
+              boutique.
             </p>
             <Link
               href="/inscription"
               className={cn(
-                buttonVariants({ variant: "secondary", size: "lg" }),
+                buttonVariants({ variant: "secondary", size: "xl" }),
                 "mt-2"
               )}
             >

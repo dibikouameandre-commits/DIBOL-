@@ -1,3 +1,21 @@
+import {
+  Calculator,
+  FileSearch,
+  FileSignature,
+  FileText,
+  FileUser,
+  Lightbulb,
+  Mail,
+  Receipt,
+  Send,
+  Share2,
+  Sparkles,
+  TrendingUp,
+  Video,
+  Workflow,
+  type LucideIcon,
+} from "lucide-react";
+
 // Registry of DIBOL AI's free tools — adding a new tool means adding an
 // entry here (plus its own page + server function), never a migration.
 // ToolRun.toolSlug references `slug` below as a plain string, not a
@@ -8,6 +26,9 @@ export type ToolDefinition = {
   name: string;
   description: string;
   category: string;
+  // Purely visual (card icon on /outils) — never read by any tool's
+  // generation/history/quota logic, safe to change freely.
+  icon: LucideIcon;
   // Free generations per anonId/IP per rolling 24h, before asking for an
   // account (higher limit) or premium (unlimited) — see src/lib/rate-limit.ts.
   dailyFreeLimit: number;
@@ -20,6 +41,7 @@ export const TOOLS: ToolDefinition[] = [
     description:
       "Crée un CV clair et professionnel en quelques minutes, sans carte bancaire.",
     category: "Emploi",
+    icon: FileUser,
     dailyFreeLimit: 3,
   },
   {
@@ -28,6 +50,7 @@ export const TOOLS: ToolDefinition[] = [
     description:
       "Rédige une lettre de motivation adaptée à l'offre visée, prête à envoyer.",
     category: "Emploi",
+    icon: Send,
     dailyFreeLimit: 3,
   },
   {
@@ -36,6 +59,7 @@ export const TOOLS: ToolDefinition[] = [
     description:
       "Crée une facture ou un devis professionnel avec calcul automatique des totaux.",
     category: "Gestion",
+    icon: Receipt,
     dailyFreeLimit: 3,
   },
   {
@@ -44,6 +68,7 @@ export const TOOLS: ToolDefinition[] = [
     description:
       "Rédige un e-mail professionnel (relance, réclamation, demande...) prêt à envoyer.",
     category: "Gestion",
+    icon: Mail,
     dailyFreeLimit: 3,
   },
   {
@@ -52,6 +77,7 @@ export const TOOLS: ToolDefinition[] = [
     description:
       "Rédige une lettre administrative (attestation, congé, démission, résiliation...) prête à envoyer.",
     category: "Gestion",
+    icon: FileText,
     dailyFreeLimit: 3,
   },
   {
@@ -60,6 +86,7 @@ export const TOOLS: ToolDefinition[] = [
     description:
       "Génère 3 variantes de post pour Facebook, Instagram, LinkedIn ou WhatsApp, prêtes à publier.",
     category: "Marketing",
+    icon: Share2,
     dailyFreeLimit: 3,
   },
   {
@@ -68,6 +95,7 @@ export const TOOLS: ToolDefinition[] = [
     description:
       "Transforme un objectif simple en prompt optimisé, prêt à coller dans ChatGPT ou Claude.",
     category: "Productivité",
+    icon: Sparkles,
     dailyFreeLimit: 3,
   },
   {
@@ -76,6 +104,7 @@ export const TOOLS: ToolDefinition[] = [
     description:
       "Décris ton activité et reçois 5 à 6 propositions de nom et slogan pour te lancer.",
     category: "Entrepreneuriat",
+    icon: Lightbulb,
     dailyFreeLimit: 3,
   },
   {
@@ -84,6 +113,7 @@ export const TOOLS: ToolDefinition[] = [
     description:
       "Décris ton projet et reçois un business plan structuré en 8 sections, téléchargeable en PDF.",
     category: "Entrepreneuriat",
+    icon: TrendingUp,
     dailyFreeLimit: 3,
   },
   {
@@ -92,6 +122,7 @@ export const TOOLS: ToolDefinition[] = [
     description:
       "Colle un texte long et obtiens un résumé court, détaillé, ou une reformulation claire.",
     category: "Productivité",
+    icon: FileSearch,
     dailyFreeLimit: 3,
   },
   {
@@ -100,6 +131,7 @@ export const TOOLS: ToolDefinition[] = [
     description:
       "Décris ton sujet et reçois un script séquencé pour TikTok, Reels ou Shorts.",
     category: "Marketing",
+    icon: Video,
     dailyFreeLimit: 3,
   },
   {
@@ -108,6 +140,7 @@ export const TOOLS: ToolDefinition[] = [
     description:
       "Calcule un prix de vente rentable à partir de ton coût de revient, ou teste la marge d'un prix.",
     category: "Gestion",
+    icon: Calculator,
     dailyFreeLimit: 20,
   },
   {
@@ -116,6 +149,7 @@ export const TOOLS: ToolDefinition[] = [
     description:
       "Génère un contrat de prestation de service ou de location simple, à faire relire avant signature.",
     category: "Gestion",
+    icon: FileSignature,
     dailyFreeLimit: 3,
   },
   {
@@ -124,6 +158,7 @@ export const TOOLS: ToolDefinition[] = [
     description:
       "Décris ton besoin d'automatisation et reçois un workflow n8n simple, prêt à importer.",
     category: "Productivité",
+    icon: Workflow,
     dailyFreeLimit: 3,
   },
 ];

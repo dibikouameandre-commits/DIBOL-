@@ -32,7 +32,12 @@ export function MobileNav({
       </SheetTrigger>
       <SheetContent side="left">
         <SheetHeader>
-          <SheetTitle>{siteConfig.name}</SheetTitle>
+          <SheetTitle className="flex items-center gap-2">
+            <span className="flex size-6 items-center justify-center rounded-md bg-primary text-xs font-bold text-primary-foreground">
+              D
+            </span>
+            {siteConfig.name}
+          </SheetTitle>
         </SheetHeader>
         <nav className="flex flex-col gap-1 px-4">
           {siteConfig.nav.map((item) => (
