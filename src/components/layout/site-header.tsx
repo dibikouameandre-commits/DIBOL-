@@ -22,7 +22,7 @@ export async function SiteHeader() {
   return (
     <SiteHeaderShell>
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
-        <div className="flex items-center gap-4 sm:gap-8">
+        <div className="flex items-center gap-4 sm:gap-6 lg:gap-8">
           <MobileNav isAuthenticated={!!session?.user} />
           <Link
             href="/"
@@ -33,12 +33,12 @@ export async function SiteHeader() {
             </span>
             {siteConfig.name}
           </Link>
-          <nav className="hidden items-center gap-7 md:flex">
+          <nav className="hidden items-center gap-4 md:flex lg:gap-7">
             {siteConfig.nav.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
-                className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+                className="text-sm font-medium whitespace-nowrap text-muted-foreground transition-colors hover:text-foreground"
               >
                 {item.title}
               </Link>
