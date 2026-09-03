@@ -9,6 +9,7 @@ import { ProductThumbnail } from "@/components/product/product-thumbnail";
 import { formatPrice } from "@/lib/format";
 import { siteConfig } from "@/config/site";
 import { getProductBySlug, getRelatedProducts } from "@/server/catalog";
+import { safeJsonLd } from "@/lib/json-ld";
 import { AddToCartButton } from "./add-to-cart-button";
 
 export async function generateMetadata({
@@ -78,7 +79,7 @@ export default async function ProductPage({
     <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd) }}
       />
 
       <nav className="mb-6 flex items-center gap-1 text-sm text-muted-foreground">

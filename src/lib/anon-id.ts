@@ -38,6 +38,18 @@ export async function getExistingAnonId(): Promise<string | null> {
   return cookieStore.get(COOKIE_NAME)?.value ?? null;
 }
 
+// Called on sign-out (see src/components/auth/sign-out-action.ts) so this
+// cookie never survives past a session boundary. Without this, a 1-year
+// cookie that is never rotated would stay on a shared device after logout
+// and get picked back up by getOrCreateAnonId()/getExistingAnonId() on the
+// next login — letting a different account see the previous account's tool
+// history via the anonId branch of every getXxxHistory() OR clause (e.g.
+// getFactureHistory() in src/server/tools/facture.ts).
+export async function clearAnonId(): Promise<void> {
+  const cookieStore = await cookies();
+  cookieStore.delete(COOKIE_NAME);
+}
+
 // Vercel sets x-forwarded-for; never store the raw value, only its hash
 // (see hashIp) — this is a rate-limit signal, not an identity record.
 export async function getRequestIpHash(): Promise<string> {

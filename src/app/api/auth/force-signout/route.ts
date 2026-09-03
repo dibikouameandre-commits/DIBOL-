@@ -26,6 +26,12 @@ export async function GET(req: NextRequest) {
   cookieStore.delete("authjs.session-token");
   cookieStore.delete("__Secure-authjs.session-token");
 
+  // Also clear the anonymous-visitor cookie: this is a session-ending path
+  // like any other sign-out, and leaving it behind would let the next
+  // account on this device inherit this session's tool history (see
+  // clearAnonId() in src/lib/anon-id.ts).
+  cookieStore.delete("dibol_anon_id");
+
   return NextResponse.redirect(
     new URL(`/connexion?from=${encodeURIComponent(from)}`, req.nextUrl.origin)
   );

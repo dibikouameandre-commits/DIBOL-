@@ -1,5 +1,58 @@
 import { z } from "zod";
 
+// Both photoDataUri (CV) and issuerLogoDataUri (facture/devis) are meant to
+// hold exactly what compressImageToDataUri() produces client-side (see
+// src/lib/client/compress-image.ts): a small re-encoded raster image. But
+// these are plain Server Action inputs — nothing stops a request crafted
+// directly (bypassing the browser UI) from sending an arbitrary string
+// instead. A length check alone doesn't catch that: this also checks the
+// declared MIME against the base64 payload's actual magic bytes, so only a
+// real image of a type we ever produce/expect gets through. Uses atob()
+// rather than Buffer so this file stays safe to import from the client
+// forms that already reuse it with zodResolver.
+const IMAGE_DATA_URI_PATTERN = /^data:image\/(jpeg|png|webp);base64,([A-Za-z0-9+/]+={0,2})$/;
+
+function isValidImageDataUri(value: string): boolean {
+  const match = value.match(IMAGE_DATA_URI_PATTERN);
+  if (!match) return false;
+  const [, mime, base64] = match;
+
+  let binary: string;
+  try {
+    binary = atob(base64);
+  } catch {
+    return false;
+  }
+  if (binary.length < 12) return false;
+  const byteAt = (i: number) => binary.charCodeAt(i);
+
+  if (mime === "jpeg") {
+    return byteAt(0) === 0xff && byteAt(1) === 0xd8 && byteAt(2) === 0xff;
+  }
+  if (mime === "png") {
+    return [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a].every(
+      (b, i) => byteAt(i) === b
+    );
+  }
+  // webp: "RIFF" + 4-byte size + "WEBP"
+  return (
+    byteAt(0) === 0x52 &&
+    byteAt(1) === 0x49 &&
+    byteAt(2) === 0x46 &&
+    byteAt(3) === 0x46 &&
+    byteAt(8) === 0x57 &&
+    byteAt(9) === 0x45 &&
+    byteAt(10) === 0x42 &&
+    byteAt(11) === 0x50
+  );
+}
+
+const imageDataUriSchema = (message: string) =>
+  z
+    .string()
+    .max(400_000, message)
+    .refine(isValidImageDataUri, "Fichier image invalide");
+
 // What the visitor fills in — kept deliberately short (one free-text field
 // for their background) since the point of an AI tool is to turn a messy
 // paragraph into a structured CV, not to make someone fill in ten repeating
@@ -20,10 +73,7 @@ export const cvFormSchema = z.object({
   // the server — see src/lib/client/compress-image.ts. Capped generously
   // above what real compressed output should reach; this is a defensive
   // backstop, not the primary size control.
-  photoDataUri: z
-    .string()
-    .max(400_000, "La photo est trop volumineuse")
-    .optional(),
+  photoDataUri: imageDataUriSchema("La photo est trop volumineuse").optional(),
 });
 
 export type CvFormValues = z.infer<typeof cvFormSchema>;
@@ -306,7 +356,7 @@ export const factureFormSchema = z.object({
   issuerPhone: z.string().optional(),
   issuerEmail: z.string().email("Email invalide").optional().or(z.literal("")),
   issuerTaxId: z.string().optional(),
-  issuerLogoDataUri: z.string().max(400_000, "Le logo est trop volumineux").optional(),
+  issuerLogoDataUri: imageDataUriSchema("Le logo est trop volumineux").optional(),
 
   clientName: z.string().min(2, "Indique le nom du client"),
   clientAddress: z.string().optional(),

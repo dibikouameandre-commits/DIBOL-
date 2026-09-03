@@ -43,6 +43,7 @@ export function PasswordForm() {
     // with a stale session that fails unpredictably on their next click.
     toast.success("Mot de passe mis à jour. Reconnecte-toi.");
     await signOut({ redirect: false });
+    await fetch("/api/auth/clear-anon-id", { method: "POST" });
     router.push("/connexion");
   };
 

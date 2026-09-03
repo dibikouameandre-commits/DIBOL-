@@ -13,6 +13,7 @@ export function SignOutButton() {
       variant="outline"
       onClick={async () => {
         await signOut({ redirect: false });
+        await fetch("/api/auth/clear-anon-id", { method: "POST" });
         router.push("/");
         router.refresh();
       }}
