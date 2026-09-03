@@ -116,7 +116,7 @@ export function CommercialHtmlPreview({ cv, photoDataUri }: { cv: CvContent; pho
         )}
 
         {cv.languages && cv.languages.length > 0 && (
-          <section>
+          <section style={{ marginBottom: sectionGap }}>
             <h3
               className="mb-2 text-[10px] font-bold tracking-wider uppercase"
               style={{ color: meta.accent }}
@@ -124,6 +124,30 @@ export function CommercialHtmlPreview({ cv, photoDataUri }: { cv: CvContent; pho
               Langues
             </h3>
             <p className="text-sm">{cv.languages.join(" · ")}</p>
+          </section>
+        )}
+
+        {cv.interests && (
+          <section style={{ marginBottom: sectionGap }}>
+            <h3
+              className="mb-2 text-[10px] font-bold tracking-wider uppercase"
+              style={{ color: meta.accent }}
+            >
+              Centres d&apos;intérêt
+            </h3>
+            <p className="text-sm">{cv.interests}</p>
+          </section>
+        )}
+
+        {cv.additionalInfo && (
+          <section>
+            <h3
+              className="mb-2 text-[10px] font-bold tracking-wider uppercase"
+              style={{ color: meta.accent }}
+            >
+              Informations complémentaires
+            </h3>
+            <p className="text-sm">{cv.additionalInfo}</p>
           </section>
         )}
       </div>

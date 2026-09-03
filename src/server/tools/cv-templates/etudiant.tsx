@@ -43,6 +43,7 @@ const styles = StyleSheet.create({
   bullet: { flexDirection: "row", marginBottom: 2 },
   bulletDot: { width: 10, color: meta.accent },
   bulletText: { flex: 1, lineHeight: 1.4 },
+  sectionText: { lineHeight: 1.4 },
   chipsRow: { flexDirection: "row", flexWrap: "wrap", gap: 6 },
   chip: {
     fontSize: 9,
@@ -163,6 +164,20 @@ export function EtudiantCvDocument({ cv, photoDataUri }: { cv: CvContent; photoD
           <View style={[styles.section, { marginBottom: sectionGap }]}>
             <Text style={styles.sectionTitle}>Langues</Text>
             <Text>{cv.languages.join(" · ")}</Text>
+          </View>
+        )}
+
+        {cv.interests && (
+          <View style={[styles.section, { marginBottom: sectionGap }]}>
+            <Text style={styles.sectionTitle}>Centres d&apos;intérêt</Text>
+            <Text style={styles.sectionText}>{cv.interests}</Text>
+          </View>
+        )}
+
+        {cv.additionalInfo && (
+          <View style={[styles.section, { marginBottom: sectionGap }]}>
+            <Text style={styles.sectionTitle}>Informations complémentaires</Text>
+            <Text style={styles.sectionText}>{cv.additionalInfo}</Text>
           </View>
         )}
 

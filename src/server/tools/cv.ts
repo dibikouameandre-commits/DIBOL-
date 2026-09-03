@@ -14,6 +14,7 @@ import {
   jobOfferFormSchema,
   matchAnalysisSchema,
   experienceLevelLabels,
+  skillLevelLabels,
   type CvFormValues,
   type CvContent,
   type CvResultData,
@@ -28,8 +29,8 @@ type GenerateCvResult =
   | { success: false; error: string };
 
 const SKILLS_INSTRUCTIONS = `Pour chaque compétence dans "skills" :
-- "name" : le nom de la compétence, tel qu'exprimé ou légèrement reformulé.
-- "level" (optionnel) : "notion", "intermediaire", "avance" ou "expert" — UNIQUEMENT si la personne a explicitement indiqué un niveau ("je maîtrise", "bonnes notions de", "expert en"...). Si aucun niveau n'est exprimé, NE MET PAS ce champ plutôt que d'en deviner un.
+- "name" : reprends EXACTEMENT le nom de la compétence tel qu'indiqué, sans le reformuler — le niveau choisi par la personne lui sera réassocié automatiquement après coup à partir de ce nom exact.
+- N'inclus PAS de champ "level" dans ta réponse : le niveau est géré en dehors de ta réponse, ne l'invente jamais et ne le devine jamais à partir du niveau indiqué ci-dessous.
 - "category" (optionnel) : un regroupement court ("Logiciels", "Techniques", "Savoir-être"...) si plusieurs compétences de nature différente sont listées. Omets ce champ si une seule catégorie suffit.`;
 
 const ANTI_REPETITION_INSTRUCTIONS = `Règles anti-répétition, très importantes :
@@ -38,14 +39,42 @@ const ANTI_REPETITION_INSTRUCTIONS = `Règles anti-répétition, très important
 - Le nombre de points par expérience doit refléter ce que la personne a réellement écrit à ce sujet : une expérience peu détaillée dans le texte source doit avoir moins de points qu'une expérience longuement décrite. N'ajoute jamais de point générique juste pour "compléter" ou équilibrer visuellement.
 - Si deux expériences se ressemblent dans le texte fourni (même entreprise, postes proches), différencie leurs points à partir de ce qui est réellement dit (évolution, nouvelle responsabilité mentionnée) — n'invente jamais une différence absente du texte.`;
 
+function formatExperiencesForPrompt(experiences: CvFormValues["experiences"]) {
+  if (experiences.length === 0) return "(aucune expérience professionnelle renseignée)";
+  return experiences
+    .map(
+      (exp, index) =>
+        `${index + 1}. ${exp.title} — ${exp.company} (${exp.period})\n${exp.description}`
+    )
+    .join("\n\n");
+}
+
+function formatEducationForPrompt(education: CvFormValues["education"]) {
+  if (education.length === 0) return "(aucune formation renseignée)";
+  return education.map((edu) => `- ${edu.degree}, ${edu.school} (${edu.year})`).join("\n");
+}
+
+function formatSkillsForPrompt(skills: CvFormValues["skills"]) {
+  if (skills.length === 0) return "(aucune compétence renseignée)";
+  return skills
+    .map((skill) => (skill.level ? `${skill.name} (${skillLevelLabels[skill.level]})` : skill.name))
+    .join(", ");
+}
+
+function formatLanguagesForPrompt(languages: CvFormValues["languages"]) {
+  if (languages.length === 0) return "(aucune langue renseignée)";
+  return languages.map((lang) => lang.name).join(", ");
+}
+
 function buildCvPrompt(values: CvFormValues) {
   const system = `Tu es un rédacteur de CV professionnel spécialisé dans le marché de l'emploi en Afrique francophone.
-Tu structures le parcours fourni par la personne en un CV clair et professionnel, en français.
+La personne t'a déjà fourni son parcours sous une forme structurée (expériences, formations, compétences, langues) : ton rôle est de rédiger/améliorer la formulation, pas de deviner une structure à partir d'un texte libre.
 Règles strictes :
-- N'invente jamais une expérience, un diplôme ou une compétence qui n'est pas mentionné dans le texte fourni. Par exemple, si la personne ne mentionne aucune compétence en anglais, ne l'ajoute pas même si le poste visé semble en avoir besoin.
-- Reformule et structure ce qui est écrit, tu ne remplaces pas le contenu par autre chose.
-- Les points d'expérience ("bullets") commencent par un verbe d'action, sont concrets, courts (une ligne).
-- Le résumé professionnel ("summary") fait 2 à 3 phrases, adapté au poste visé et au niveau d'expérience.
+- N'invente jamais une expérience, un diplôme, une compétence ou une langue qui n'est pas dans les informations fournies. Par exemple, si la personne ne mentionne aucune compétence en anglais, ne l'ajoute pas même si le poste visé semble en avoir besoin.
+- Pour chaque expérience, transforme la description fournie en points ("bullets") : commence chaque point par un verbe d'action, reste concret et court (une ligne). Le titre, l'entreprise et la période sont déjà corrects, reprends-les tels quels (tu peux corriger une faute évidente).
+- Pour chaque formation, reprends le diplôme, l'établissement et l'année tels quels (tu peux corriger une faute évidente, ne reformule pas le fond).
+- Le résumé professionnel ("summary") part de ce que la personne a écrit, amélioré et adapté au poste visé et au niveau d'expérience, en 2 à 3 phrases.
+- "interests" et "additionalInfo" : reprends ce que la personne a écrit, légèrement reformulé pour la clarté si besoin, sans jamais l'omettre si elle a fourni quelque chose ni en ajouter si elle n'a rien fourni.
 ${ANTI_REPETITION_INSTRUCTIONS}
 ${SKILLS_INSTRUCTIONS}
 - Réponds uniquement avec un objet JSON valide, sans texte autour, respectant exactement ce schéma :
@@ -58,11 +87,13 @@ ${SKILLS_INSTRUCTIONS}
   "summary": string,
   "experiences": [{ "title": string, "company": string, "period": string, "bullets": string[] }],
   "education": [{ "degree": string, "school": string, "year": string }],
-  "skills": [{ "name": string, "level"?: string, "category"?: string }],
-  "languages": string[]
+  "skills": [{ "name": string, "category"?: string }],
+  "languages": string[],
+  "interests"?: string,
+  "additionalInfo"?: string
 }
-Si aucune expérience professionnelle n'est mentionnée, renvoie un tableau "experiences" vide plutôt que d'en inventer une.
-Si aucune formation n'est mentionnée, renvoie un tableau "education" vide.`;
+Si aucune expérience professionnelle n'est fournie, renvoie un tableau "experiences" vide plutôt que d'en inventer une.
+Si aucune formation n'est fournie, renvoie un tableau "education" vide.`;
 
   const user = `Nom complet : ${values.fullName}
 Poste visé : ${values.targetRole}
@@ -71,10 +102,31 @@ Téléphone : ${values.phone}
 Email : ${values.email}
 Niveau d'expérience : ${experienceLevelLabels[values.experienceLevel]}
 
-Parcours décrit par la personne :
+Résumé professionnel écrit par la personne :
 """
-${values.background}
-"""`;
+${values.summary}
+"""
+
+Expériences professionnelles :
+"""
+${formatExperiencesForPrompt(values.experiences)}
+"""
+
+Formations :
+"""
+${formatEducationForPrompt(values.education)}
+"""
+
+Compétences (le niveau entre parenthèses est indiqué pour contexte uniquement, ne le renvoie pas) :
+"""
+${formatSkillsForPrompt(values.skills)}
+"""
+
+Langues : ${formatLanguagesForPrompt(values.languages)}
+
+Centres d'intérêt : ${values.interests ? `"""\n${values.interests}\n"""` : "(non renseigné)"}
+
+Informations complémentaires : ${values.additionalInfo ? `"""\n${values.additionalInfo}\n"""` : "(non renseigné)"}`;
 
   return { system, user };
 }
@@ -117,6 +169,26 @@ async function callCvModel(system: string, user: string): Promise<CvContent | nu
   }
 
   return contentParsed.data;
+}
+
+// Skill level is a fact the user already chose in the form — never left to
+// the model to reproduce (see SKILLS_INSTRUCTIONS). Matched back onto the
+// AI's output by exact name, case/whitespace-insensitive, since the model
+// is instructed to keep names unchanged specifically so this match holds.
+function applyUserSkillLevels(content: CvContent, formSkills: CvFormValues["skills"]): CvContent {
+  const levelByName = new Map(
+    formSkills
+      .filter((skill) => skill.level)
+      .map((skill) => [skill.name.trim().toLowerCase(), skill.level])
+  );
+
+  return {
+    ...content,
+    skills: content.skills.map((skill) => ({
+      ...skill,
+      level: levelByName.get(skill.name.trim().toLowerCase()),
+    })),
+  };
 }
 
 // The actual safeguard against repetitive/generic CVs: a deterministic
@@ -195,7 +267,7 @@ export async function generateCv(
   });
 
   const resultData: CvResultData = {
-    cv: generated.content,
+    cv: applyUserSkillLevels(generated.content, parsed.data.skills),
     templateId: parsed.data.templateId,
     photoDataUri: parsed.data.photoDataUri,
     matches: [],

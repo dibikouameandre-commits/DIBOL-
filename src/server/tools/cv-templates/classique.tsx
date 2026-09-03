@@ -186,6 +186,20 @@ export function ClassiqueCvDocument({ cv, photoDataUri }: { cv: CvContent; photo
           </View>
         )}
 
+        {cv.interests && (
+          <View style={[styles.section, { marginBottom: sectionGap }]}>
+            <Text style={styles.sectionTitle}>Centres d&apos;intérêt</Text>
+            <Text style={styles.summary}>{cv.interests}</Text>
+          </View>
+        )}
+
+        {cv.additionalInfo && (
+          <View style={[styles.section, { marginBottom: sectionGap }]}>
+            <Text style={styles.sectionTitle}>Informations complémentaires</Text>
+            <Text style={styles.summary}>{cv.additionalInfo}</Text>
+          </View>
+        )}
+
         <Text style={styles.footer} fixed>Créé gratuitement avec DIBOL AI — dibol-ai.vercel.app</Text>
       </Page>
     </Document>

@@ -45,6 +45,7 @@ const styles = StyleSheet.create({
   bullet: { flexDirection: "row", marginBottom: 2 },
   bulletDot: { width: 10, color: meta.accent },
   bulletText: { flex: 1, lineHeight: 1.4 },
+  sectionText: { fontSize: 9.5, lineHeight: 1.4 },
   skillsRow: { flexDirection: "row", flexWrap: "wrap" },
   skillCol: { width: "50%", marginBottom: 4, flexDirection: "row", alignItems: "center", gap: 5 },
   skillDot: { width: 4, height: 4, borderRadius: 2, backgroundColor: meta.accent },
@@ -146,6 +147,20 @@ export function CadreCvDocument({ cv, photoDataUri }: { cv: CvContent; photoData
             <View style={[styles.section, { marginBottom: sectionGap }]}>
               <Text style={styles.sectionTitle}>Langues</Text>
               <Text>{cv.languages.join(" · ")}</Text>
+            </View>
+          )}
+
+          {cv.interests && (
+            <View style={[styles.section, { marginBottom: sectionGap }]}>
+              <Text style={styles.sectionTitle}>Centres d&apos;intérêt</Text>
+              <Text style={styles.sectionText}>{cv.interests}</Text>
+            </View>
+          )}
+
+          {cv.additionalInfo && (
+            <View style={[styles.section, { marginBottom: sectionGap }]}>
+              <Text style={styles.sectionTitle}>Informations complémentaires</Text>
+              <Text style={styles.sectionText}>{cv.additionalInfo}</Text>
             </View>
           )}
         </View>

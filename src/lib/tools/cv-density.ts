@@ -31,6 +31,14 @@ function estimateContentLines(cv: CvContent): number {
     lines += 2;
   }
 
+  if (cv.interests) {
+    lines += 1 + Math.ceil(cv.interests.length / 85);
+  }
+
+  if (cv.additionalInfo) {
+    lines += 1 + Math.ceil(cv.additionalInfo.length / 85);
+  }
+
   return lines;
 }
 

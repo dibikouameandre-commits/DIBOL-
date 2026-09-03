@@ -54,6 +54,7 @@ const styles = StyleSheet.create({
     paddingTop: 3,
   },
   bulletText: { flex: 1, lineHeight: 1.4 },
+  sectionText: { lineHeight: 1.4, fontSize: 10 },
   chipsRow: { flexDirection: "row", flexWrap: "wrap", gap: 6 },
   chip: {
     fontSize: 9,
@@ -162,6 +163,20 @@ export function CommercialCvDocument({ cv, photoDataUri }: { cv: CvContent; phot
             <View style={[styles.section, { marginBottom: sectionGap, marginTop: 0 }]}>
               <Text style={styles.sectionTitle}>Langues</Text>
               <Text>{cv.languages.join(" · ")}</Text>
+            </View>
+          )}
+
+          {cv.interests && (
+            <View style={[styles.section, { marginBottom: sectionGap }]}>
+              <Text style={styles.sectionTitle}>Centres d&apos;intérêt</Text>
+              <Text style={styles.sectionText}>{cv.interests}</Text>
+            </View>
+          )}
+
+          {cv.additionalInfo && (
+            <View style={[styles.section, { marginBottom: sectionGap }]}>
+              <Text style={styles.sectionTitle}>Informations complémentaires</Text>
+              <Text style={styles.sectionText}>{cv.additionalInfo}</Text>
             </View>
           )}
         </View>

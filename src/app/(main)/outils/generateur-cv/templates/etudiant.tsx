@@ -114,9 +114,23 @@ export function EtudiantHtmlPreview({ cv, photoDataUri }: { cv: CvContent; photo
       )}
 
       {cv.languages && cv.languages.length > 0 && (
-        <section>
+        <section style={{ marginBottom: sectionGap }}>
           <SectionPill>Langues</SectionPill>
           <p className="text-sm">{cv.languages.join(" · ")}</p>
+        </section>
+      )}
+
+      {cv.interests && (
+        <section style={{ marginBottom: sectionGap }}>
+          <SectionPill>Centres d&apos;intérêt</SectionPill>
+          <p className="text-sm">{cv.interests}</p>
+        </section>
+      )}
+
+      {cv.additionalInfo && (
+        <section>
+          <SectionPill>Informations complémentaires</SectionPill>
+          <p className="text-sm">{cv.additionalInfo}</p>
         </section>
       )}
 

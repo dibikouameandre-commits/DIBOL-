@@ -53,10 +53,42 @@ const imageDataUriSchema = (message: string) =>
     .max(400_000, message)
     .refine(isValidImageDataUri, "Fichier image invalide");
 
-// What the visitor fills in — kept deliberately short (one free-text field
-// for their background) since the point of an AI tool is to turn a messy
-// paragraph into a structured CV, not to make someone fill in ten repeating
-// form sections by hand.
+// Structured, repeatable sections — the user enters their real facts
+// (dates, titles, diplomas) directly rather than describing them in prose;
+// the AI's job (see buildCvPrompt in server/tools/cv.ts) shifts from
+// "infer a structure from free text" to "rewrite what's already structured
+// into professional wording", which is both simpler and more reliable.
+export const cvExperienceInputSchema = z.object({
+  title: z.string().min(1, "Indique le poste"),
+  company: z.string().min(1, "Indique l'entreprise"),
+  period: z.string().min(1, "Indique la période"),
+  description: z
+    .string()
+    .min(1, "Décris brièvement ce que tu faisais")
+    .max(1000, "1000 caractères maximum par expérience"),
+});
+export type CvExperienceInput = z.infer<typeof cvExperienceInputSchema>;
+
+export const cvEducationInputSchema = z.object({
+  degree: z.string().min(1, "Indique le diplôme"),
+  school: z.string().min(1, "Indique l'établissement"),
+  year: z.string().min(1, "Indique l'année"),
+});
+export type CvEducationInput = z.infer<typeof cvEducationInputSchema>;
+
+const cvSkillLevelInputSchema = z.enum(["notion", "intermediaire", "avance", "expert"]);
+
+export const cvSkillInputSchema = z.object({
+  name: z.string().min(1, "Indique une compétence"),
+  level: cvSkillLevelInputSchema.optional(),
+});
+export type CvSkillInput = z.infer<typeof cvSkillInputSchema>;
+
+export const cvLanguageInputSchema = z.object({
+  name: z.string().min(1, "Indique une langue"),
+});
+export type CvLanguageInput = z.infer<typeof cvLanguageInputSchema>;
+
 export const cvFormSchema = z.object({
   fullName: z.string().min(2, "Indique ton nom complet"),
   targetRole: z.string().min(2, "Indique le poste visé"),
@@ -64,10 +96,18 @@ export const cvFormSchema = z.object({
   phone: z.string().min(6, "Indique un numéro de téléphone"),
   email: z.string().email("Email invalide"),
   experienceLevel: z.enum(["debutant", "intermediaire", "confirme"]),
-  background: z
+  // Short professional profile/summary — not the full parcours anymore,
+  // since experiences/education are now their own structured sections.
+  summary: z
     .string()
-    .min(40, "Décris ton parcours en au moins quelques phrases")
-    .max(4000, "Décris ton parcours en 4000 caractères maximum"),
+    .min(20, "Décris ton profil en une ou deux phrases")
+    .max(800, "800 caractères maximum"),
+  experiences: z.array(cvExperienceInputSchema).max(10, "10 expériences maximum"),
+  education: z.array(cvEducationInputSchema).max(8, "8 formations maximum"),
+  skills: z.array(cvSkillInputSchema).max(20, "20 compétences maximum"),
+  languages: z.array(cvLanguageInputSchema).max(10, "10 langues maximum"),
+  interests: z.string().max(300, "300 caractères maximum").optional(),
+  additionalInfo: z.string().max(500, "500 caractères maximum").optional(),
   templateId: z.enum(["classique", "moderne", "etudiant", "cadre", "commercial"]),
   // A compressed JPEG data URI, resized client-side before it ever reaches
   // the server — see src/lib/client/compress-image.ts. Capped generously
@@ -120,13 +160,18 @@ export const cvContentSchema = z.object({
     z.object({
       degree: z.string(),
       school: z.string(),
-      year: z.string(),
+      // A year "looks numeric" to the model, so it sometimes returns it as
+      // a JSON number (e.g. 2014) instead of a string — same class of
+      // mismatch as interests/additionalInfo above. Coerced to string so
+      // nothing downstream (templates, cv-density.ts) needs to change.
+      year: z.union([z.string(), z.number()]).transform(String),
     })
   ),
-  // level/category are optional on purpose: the model must only set them
-  // when the person's own text actually implies a level or a grouping —
-  // never invented just to fill the field. See the system prompt in
-  // src/server/tools/cv.ts.
+  // "level" is chosen directly by the user in the form now (see
+  // cvSkillInputSchema) — the model only ever passes it through unchanged.
+  // "category" stays model-assigned: a short grouping label ("Logiciels",
+  // "Techniques"...) when several skills of a different nature are listed,
+  // never invented as a fact, just an organizational label.
   skills: z.array(
     z.object({
       name: z.string(),
@@ -135,6 +180,17 @@ export const cvContentSchema = z.object({
     })
   ),
   languages: z.array(z.string()).optional(),
+  // Both lightly reformatted from the user's own free text, never invented.
+  // .nullable() alongside .optional(): when nothing was provided for these
+  // (the common case — both are facultatif in the form), the model is just
+  // as likely to answer with an explicit `null` as to omit the key entirely
+  // — .optional() alone only accepts the latter, rejecting the former and
+  // failing generation outright. Both mean exactly the same thing here, so
+  // both are accepted; nothing downstream (templates, cv-density.ts) needs
+  // to change, since `null` is already falsy in every `cv.interests && ...`
+  // check they use.
+  interests: z.string().nullable().optional(),
+  additionalInfo: z.string().nullable().optional(),
 });
 
 export type CvContent = z.infer<typeof cvContentSchema>;

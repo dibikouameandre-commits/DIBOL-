@@ -172,6 +172,20 @@ export function ModerneCvDocument({ cv, photoDataUri }: { cv: CvContent; photoDa
               ))}
             </View>
           )}
+
+          {cv.interests && (
+            <View style={[styles.section, { marginBottom: sectionGap }]}>
+              <Text style={styles.sectionTitle}>Centres d&apos;intérêt</Text>
+              <Text style={styles.summary}>{cv.interests}</Text>
+            </View>
+          )}
+
+          {cv.additionalInfo && (
+            <View style={[styles.section, { marginBottom: sectionGap }]}>
+              <Text style={styles.sectionTitle}>Informations complémentaires</Text>
+              <Text style={styles.summary}>{cv.additionalInfo}</Text>
+            </View>
+          )}
         </View>
       </Page>
     </Document>
