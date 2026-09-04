@@ -43,6 +43,14 @@
   --color-brand-accent-foreground: var(--brand-accent-foreground);
   --color-brand-success: var(--brand-success);
   --color-brand-success-foreground: var(--brand-success-foreground);
+  /* Design tokens phase 1 — additive, not yet consumed by any component
+     (reserved for a later pass: menus/dropdowns, quota/alert banners). */
+  --color-surface-elevated: var(--surface-elevated);
+  --color-warning: var(--warning);
+  --color-info: var(--info);
+  --color-border-hover: var(--border-hover);
+  --shadow-elevated: var(--elevated-shadow);
+  --shadow-modal: var(--modal-shadow);
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
   --radius-lg: var(--radius);
@@ -89,6 +97,44 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+
+  /* Design tokens phase 1 — reserved for a later pass (menus/dropdowns,
+     quota/alert banners); not yet referenced by any component. */
+  --surface-elevated: #FFFFFF;
+  --warning: #F59E0B;
+  --info: #4338CA;
+  --border-hover: #C7C7D6;
+  --elevated-shadow: 0 12px 32px -8px rgb(0 0 0 / 0.18);
+  --modal-shadow: 0 24px 60px -12px rgb(0 0 0 / 0.25);
+
+  /* Tool category colors (src/lib/tools/tool-visual.ts), centralized here.
+     Same values as before, theme-invariant on purpose: the 14 tool cards
+     already rendered identically regardless of light/dark, this just moves
+     the values out of the TS file instead of changing that behavior. */
+  --tool-emploi-from: #4338CA;
+  --tool-emploi-to: #6366F1;
+  --tool-gestion-from: #0F766E;
+  --tool-gestion-to: #14B8A6;
+  --tool-marketing-from: #EA4335;
+  --tool-marketing-to: #F8BF24;
+  --tool-productivite-from: #2563EB;
+  --tool-productivite-to: #38BDF8;
+  --tool-entrepreneuriat-from: #7C3AED;
+  --tool-entrepreneuriat-to: #A78BFA;
+  --tool-fallback-from: #4338CA;
+  --tool-fallback-to: #7C3AED;
+
+  /* Shop category colors (src/lib/product-visual.ts), same principle. */
+  --shop-n8n-from: oklch(0.55 0.2 277);
+  --shop-n8n-to: oklch(0.62 0.19 255);
+  --shop-prompts-from: oklch(0.6 0.2 300);
+  --shop-prompts-to: oklch(0.55 0.22 277);
+  --shop-formations-from: oklch(0.62 0.19 255);
+  --shop-formations-to: oklch(0.65 0.15 220);
+  --shop-templates-from: oklch(0.6 0.18 320);
+  --shop-templates-to: oklch(0.55 0.2 277);
+  --shop-fallback-from: oklch(0.55 0.2 277);
+  --shop-fallback-to: oklch(0.6 0.18 320);
 }
 
 .dark {
@@ -127,6 +173,14 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+
+  /* Design tokens phase 1 — dark-mode pairs, same reservation as :root. */
+  --surface-elevated: #242430;
+  --warning: #FBBF24;
+  --info: #A5B4FC;
+  --border-hover: #3A3A4A;
+  --elevated-shadow: 0 12px 32px -8px rgb(0 0 0 / 0.5);
+  --modal-shadow: 0 24px 60px -12px rgb(0 0 0 / 0.6);
 }
 
 @layer base {

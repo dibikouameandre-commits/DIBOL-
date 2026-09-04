@@ -12,27 +12,30 @@ type Visual = {
   icon: LucideIcon;
 };
 
+// Values live once in src/app/globals.css (--shop-*-from/--shop-*-to) and
+// are referenced here via CSS variables — same principle as
+// src/lib/tools/tool-visual.ts.
 const visualsBySlug: Record<string, Visual> = {
   "automatisation-n8n": {
-    gradient: "from-[oklch(0.55_0.2_277)] to-[oklch(0.62_0.19_255)]",
+    gradient: "from-[var(--shop-n8n-from)] to-[var(--shop-n8n-to)]",
     icon: Workflow,
   },
   "prompts-ia": {
-    gradient: "from-[oklch(0.6_0.2_300)] to-[oklch(0.55_0.22_277)]",
+    gradient: "from-[var(--shop-prompts-from)] to-[var(--shop-prompts-to)]",
     icon: Sparkles,
   },
   "formations-ia": {
-    gradient: "from-[oklch(0.62_0.19_255)] to-[oklch(0.65_0.15_220)]",
+    gradient: "from-[var(--shop-formations-from)] to-[var(--shop-formations-to)]",
     icon: GraduationCap,
   },
   "templates-workflows": {
-    gradient: "from-[oklch(0.6_0.18_320)] to-[oklch(0.55_0.2_277)]",
+    gradient: "from-[var(--shop-templates-from)] to-[var(--shop-templates-to)]",
     icon: LayoutTemplate,
   },
 };
 
 const fallbackVisual: Visual = {
-  gradient: "from-[oklch(0.55_0.2_277)] to-[oklch(0.6_0.18_320)]",
+  gradient: "from-[var(--shop-fallback-from)] to-[var(--shop-fallback-to)]",
   icon: Package,
 };
 

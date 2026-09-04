@@ -50,8 +50,31 @@ export function ToolCard({
         <div className="flex items-center justify-between gap-2">
           <Badge
             variant="secondary"
-            className="w-fit border-0"
-            style={{ backgroundColor: `${color}1A`, color }}
+            className={cn(
+              "w-fit border-0",
+              // Light mode: unchanged from before (~10% of the category
+              // color as a fill, the category color itself as text) — just
+              // expressed in CSS instead of a JS-computed inline hex string,
+              // so the dark: override below can actually take effect (an
+              // inline `style` color/backgroundColor would otherwise always
+              // win over any className, dark or not). Marked `!important`
+              // since the `secondary` variant's own bg-secondary/
+              // text-secondary-foreground utilities aren't recognized by
+              // tailwind-merge as conflicting with these arbitrary
+              // properties, so both would otherwise ship and the variant's
+              // flat gray would win by source order.
+              "[background-color:color-mix(in_oklch,var(--badge-color),transparent_90%)]!",
+              "[color:var(--badge-color)]!",
+              // Dark mode: the raw category color (designed against a white
+              // card) was failing contrast on the dark card background
+              // (~1.86:1, WCAG needs 4.5:1). Forcing the text to a fixed
+              // high lightness via OKLCH relative syntax — keeping the
+              // category's own hue/chroma — fixes that without needing a
+              // second, hand-picked color per category.
+              "dark:[background-color:color-mix(in_oklch,var(--badge-color),transparent_85%)]!",
+              "dark:[color:oklch(from_var(--badge-color)_0.82_c_h)]!"
+            )}
+            style={{ "--badge-color": color } as React.CSSProperties}
           >
             {tool.category}
           </Badge>
